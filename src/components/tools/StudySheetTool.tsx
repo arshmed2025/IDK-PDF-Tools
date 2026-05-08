@@ -42,7 +42,7 @@ function prettify(name: string): string {
   return name.replace(/\.[^.]+$/, '').replace(/[_-]/g, ' ').trim().replace(/\b\w/g, c => c.toUpperCase())
 }
 
-async function resizeImage(file: File, maxWIn: number, maxHIn: number, dpi = 200, quality = 0.88): Promise<{ data: ArrayBuffer; width: number; height: number; type: string }> {
+async function resizeImage(file: File, maxWIn: number, maxHIn: number, dpi = 200, quality = 0.88): Promise<{ data: Uint8Array; width: number; height: number }> {
   return new Promise((resolve, reject) => {
     const img = new Image()
     const url = URL.createObjectURL(file)
@@ -55,9 +55,7 @@ async function resizeImage(file: File, maxWIn: number, maxHIn: number, dpi = 200
 
       const targetW = Math.round(dispW * dpi)
       const targetH = Math.round(dispH * dpi)
-      const scaleW = Math.min(1, targetW / img.width)
-      const scaleH = Math.min(1, targetH / img.height)
-      const scale = Math.min(scaleW, scaleH)
+      const scale = Math.min(1, targetW / img.width, targetH / img.height)
       const canvasW = Math.round(img.width * scale)
       const canvasH = Math.round(img.height * scale)
 
@@ -70,7 +68,11 @@ async function resizeImage(file: File, maxWIn: number, maxHIn: number, dpi = 200
       ctx.drawImage(img, 0, 0, canvasW, canvasH)
       canvas.toBlob(blob => {
         if (!blob) { reject(new Error('canvas.toBlob failed')); return }
-        blob.arrayBuffer().then(buf => resolve({ data: buf, width: Math.round(dispW * 914400), height: Math.round(dispH * 914400), type: blob.type }))
+        blob.arrayBuffer().then(buf => resolve({
+          data: new Uint8Array(buf),
+          width: Math.round(dispW * 96),
+          height: Math.round(dispH * 96),
+        }))
       }, 'image/jpeg', quality)
     }
     img.onerror = reject
@@ -173,7 +175,7 @@ export default function StudySheetTool() {
             children.push(new Paragraph({
               alignment: AlignmentType.CENTER,
               spacing: { before: 0, after: 200 },
-              children: [new ImageRun({ data, transformation: { width, height }, type: 'jpg' } as any)],
+              children: [new ImageRun({ data, transformation: { width, height }, type: 'jpg' })],
             }))
           } catch {
             children.push(new Paragraph({ children: [new TextRun({ text: `[Could not embed: ${img.name}]`, italics: true, color: '999999' })] }))
@@ -235,7 +237,7 @@ export default function StudySheetTool() {
                   cellChildren.push(new Paragraph({
                     alignment: AlignmentType.CENTER,
                     spacing: { before: 0, after: 80 },
-                    children: [new ImageRun({ data, transformation: { width, height }, type: 'jpg' } as any)],
+                    children: [new ImageRun({ data, transformation: { width, height }, type: 'jpg' })],
                   }))
                 } catch {
                   cellChildren.push(new Paragraph({ children: [new TextRun({ text: `[Could not embed: ${img.name}]`, italics: true, color: '999999' })] }))
@@ -262,7 +264,7 @@ export default function StudySheetTool() {
       setProgressMsg('Assembling document…')
 
       const doc = new Document({
-        numbering: numberingConfig,
+        ...(numberingConfig ? { numbering: numberingConfig } : {}),
         sections: [{
           properties: {
             page: {
@@ -277,9 +279,9 @@ export default function StudySheetTool() {
                   border: { top: { style: BorderStyle.SINGLE, size: 6, color: 'C8C8C8', space: 6 } },
                   spacing: { before: 120 },
                   children: [
-                    new TextRun({ text: `${branding}\t`, italics: true, size: 24, color: '555555', font: 'Montserrat' } as any),
-                    new TextRun({ text: 'Page ', size: 24, color: '555555', font: 'Montserrat' } as any),
-                    new TextRun({ children: [PageNumber.CURRENT], size: 24, color: '555555', font: 'Montserrat' } as any),
+                    new TextRun({ text: `${branding}\t`, italics: true, size: 24, color: '555555', font: 'Montserrat' }),
+                    new TextRun({ text: 'Page ', size: 24, color: '555555', font: 'Montserrat' }),
+                    new TextRun({ children: [PageNumber.CURRENT], size: 24, color: '555555', font: 'Montserrat' }),
                   ],
                 }),
               ],

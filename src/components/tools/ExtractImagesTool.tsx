@@ -4,12 +4,11 @@ import { Image as ImageIcon, ChevronLeft, ChevronRight, Download, Loader2, X, Sp
 import JSZip from 'jszip'
 import { toast } from 'sonner'
 
-import { getPdfMetaData, downloadFile } from '../../utils/pdfHelpers'
+import { getPdfMetaData } from '../../utils/pdfHelpers'
 import { addActivity } from '../../utils/recentActivity'
 import { usePipeline } from '../../utils/pipelineContext'
 import { NativeToolLayout } from './shared/NativeToolLayout'
 import PrivacyBadge from './shared/PrivacyBadge'
-import SuccessState from './shared/SuccessState'
 import {
   loadPdfForExtraction,
   extractImagesFromPage,
@@ -35,8 +34,6 @@ export default function ExtractImagesTool() {
   const [images, setImages] = useState<ExtractedImage[]>([])
   const [isProcessing, setIsProcessing] = useState(false)
   const [progress, setProgress] = useState('')
-  const [downloadUrl, setDownloadUrl] = useState<string | null>(null)
-  const [extractedCount, setExtractedCount] = useState(0)
   const [pageInput, setPageInput] = useState('1')
 
   imagesRef.current = images
@@ -91,7 +88,6 @@ export default function ExtractImagesTool() {
 
     setImages([])
     setPagePreview(null)
-    setDownloadUrl(null)
     setProgress('')
     clearPreviewCache()
     setIsProcessing(true)
@@ -124,7 +120,6 @@ export default function ExtractImagesTool() {
 
     disposeImages(imagesRef.current)
     setImages([])
-    setDownloadUrl(null)
     setIsProcessing(true)
     setProgress('Starting extraction…')
 
@@ -139,27 +134,12 @@ export default function ExtractImagesTool() {
       if (controller.signal.aborted) { disposeImages(extracted); return }
 
       setImages(extracted)
-      setExtractedCount(extracted.length)
 
       if (extracted.length === 0) {
         setProgress('No extractable images found on this page.')
-        return
-      }
-
-      // Auto-zip if multiple images
-      if (extracted.length > 1) {
-        const zip = new JSZip()
-        const baseName = pdfData.file.name.replace(/\.pdf$/i, '')
-        for (let i = 0; i < extracted.length; i++) {
-          zip.file(`${baseName}_page${pageNumber}_img${i + 1}.png`, extracted[i].blob)
-        }
-        const zipBlob = await zip.generateAsync({ type: 'blob', compression: 'STORE' })
-        const url = URL.createObjectURL(zipBlob)
-        setDownloadUrl(url)
-        addActivity({ name: `${baseName}-images.zip`, tool: 'Extract Images', size: zipBlob.size, resultUrl: url })
-        toast.success(`Extracted ${extracted.length} images!`)
       } else {
-        toast.success('Image extracted!')
+        setProgress('')
+        toast.success(`Extracted ${extracted.length} image${extracted.length > 1 ? 's' : ''}!`)
       }
     } catch (err) {
       if (!controller.signal.aborted) {
@@ -173,11 +153,27 @@ export default function ExtractImagesTool() {
 
   const downloadSingle = (img: ExtractedImage, idx: number) => {
     const baseName = pdfData?.file.name.replace(/\.pdf$/i, '') ?? 'image'
-    downloadFile(new Uint8Array(img.blob instanceof Blob ? [] : []), `${baseName}_page${pageNumber}_img${idx + 1}.png`, 'image/png')
     const a = document.createElement('a')
     a.href = img.url
     a.download = `${baseName}_page${pageNumber}_img${idx + 1}.png`
     a.click()
+  }
+
+  const downloadAll = async () => {
+    if (!pdfData || images.length < 2) return
+    const baseName = pdfData.file.name.replace(/\.pdf$/i, '')
+    const zip = new JSZip()
+    for (let i = 0; i < images.length; i++) {
+      zip.file(`${baseName}_page${pageNumber}_img${i + 1}.png`, images[i].blob)
+    }
+    const zipBlob = await zip.generateAsync({ type: 'blob', compression: 'STORE' })
+    const url = URL.createObjectURL(zipBlob)
+    addActivity({ name: `${baseName}-images.zip`, tool: 'Extract Images', size: zipBlob.size, resultUrl: url })
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `${baseName}_page${pageNumber}_images.zip`
+    a.click()
+    setTimeout(() => URL.revokeObjectURL(url), 2000)
   }
 
   const reset = () => {
@@ -189,7 +185,6 @@ export default function ExtractImagesTool() {
     setPdfData(null)
     setImages([])
     setPagePreview(null)
-    setDownloadUrl(null)
     setProgress('')
     setPageNumber(1)
     setPageInput('1')
@@ -275,7 +270,7 @@ export default function ExtractImagesTool() {
               </button>
               <span className="text-sm text-gray-400 mr-2">of {pdfData.pageCount}</span>
 
-              {!downloadUrl && images.length === 0 && (
+              {(
                 <button
                   onClick={handleExtract}
                   disabled={isProcessing}
@@ -305,13 +300,21 @@ export default function ExtractImagesTool() {
           )}
 
           {/* Results */}
-          {images.length > 0 && !downloadUrl && (
+          {images.length > 0 && (
             <div className="bg-white dark:bg-zinc-900 rounded-3xl border border-gray-100 dark:border-white/5 overflow-hidden">
               <div className="px-6 py-4 border-b border-gray-100 dark:border-white/5 flex items-center justify-between">
                 <h3 className="text-sm font-black dark:text-white">
                   Extracted Images
                   <span className="ml-2 text-xs font-bold text-gray-400 bg-gray-100 dark:bg-zinc-800 px-2 py-0.5 rounded-full">{images.length}</span>
                 </h3>
+                {images.length > 1 && (
+                  <button
+                    onClick={downloadAll}
+                    className="flex items-center gap-1.5 text-xs font-black text-rose-500 hover:text-rose-600 transition-colors"
+                  >
+                    <Download size={13} /> Download All (ZIP)
+                  </button>
+                )}
               </div>
               <div className="p-4 space-y-3 max-h-96 overflow-y-auto">
                 {images.map((img, idx) => (
@@ -340,17 +343,6 @@ export default function ExtractImagesTool() {
             </div>
           )}
 
-          {downloadUrl && (
-            <div className="bg-white dark:bg-zinc-900 p-8 rounded-[2rem] border border-gray-100 dark:border-white/5">
-              <SuccessState
-                message={`Extracted ${extractedCount} images!`}
-                downloadUrl={downloadUrl}
-                fileName={`${pdfData.file.name.replace(/\.pdf$/i, '')}-page${pageNumber}-images.zip`}
-                onStartOver={reset}
-                showPreview={false}
-              />
-            </div>
-          )}
         </div>
       )}
 
