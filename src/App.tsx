@@ -9,10 +9,10 @@
  */
 
 import { useState, useEffect, Suspense } from 'react'
-import { 
-  Layers, Scissors, Zap, Smartphone as SmartphoneIcon, Monitor as MonitorIcon, Lock, Unlock, 
-  RotateCw, Type, Hash, Tags, FileText, ArrowUpDown, PenTool, 
-  Wrench, ImagePlus, FileImage, Palette, X, ChevronDown
+import {
+  Layers, Scissors, Zap, Smartphone as SmartphoneIcon, Monitor as MonitorIcon, Lock, Unlock,
+  RotateCw, Type, Hash, Tags, FileText, ArrowUpDown, PenTool,
+  Wrench, ImagePlus, FileImage, Palette, X, ChevronDown, Microscope, BookOpen
 } from 'lucide-react'
 import { HashRouter, Routes, Route, useNavigate } from 'react-router-dom'
 import { Toaster, toast } from 'sonner'
@@ -54,6 +54,8 @@ import SignatureTool from './components/tools/SignatureTool'
 import RepairTool from './components/tools/RepairTool'
 import ExtractImagesTool from './components/tools/ExtractImagesTool'
 import GrayscaleTool from './components/tools/GrayscaleTool'
+import HistologyReordererTool from './components/tools/HistologyReordererTool'
+import StudySheetTool from './components/tools/StudySheetTool'
 
 const tools: Tool[] = [
   { title: 'Merge PDF', desc: 'Combine multiple PDF files into one document.', icon: Layers, implemented: true, path: '/merge', category: 'Edit', color: 'text-rose-500', bg: 'bg-rose-50 dark:bg-rose-900/20' },
@@ -73,6 +75,8 @@ const tools: Tool[] = [
   { title: 'Extract Images', desc: 'Pull out all original images embedded in a PDF.', icon: FileImage, implemented: true, path: '/extract-images', category: 'Convert', color: 'text-yellow-500', bg: 'bg-yellow-50 dark:bg-yellow-900/20' },
   { title: 'PDF to Text', desc: 'Extract plain text from your PDF documents.', icon: FileText, implemented: true, path: '/pdf-to-text', category: 'Convert', color: 'text-blue-600', bg: 'bg-blue-100 dark:bg-blue-900/20' },
   { title: 'Repair PDF', desc: 'Attempt to fix corrupted or unreadable documents.', icon: Wrench, implemented: true, path: '/repair', category: 'Optimize', color: 'text-red-500', bg: 'bg-red-50 dark:bg-red-900/20' },
+  { title: 'Histology Reorderer', desc: 'Drag and drop images to reorder them and export a custom order file.', icon: Microscope, implemented: true, path: '/histology-reorderer', category: 'Edit', color: 'text-fuchsia-500', bg: 'bg-fuchsia-50 dark:bg-fuchsia-900/20' },
+  { title: 'Study Sheet Generator', desc: 'Convert histology images into a printable Word study document.', icon: BookOpen, implemented: true, path: '/study-sheet', category: 'Convert', color: 'text-violet-500', bg: 'bg-violet-50 dark:bg-violet-900/20' },
 ]
 
 export const IS_OCR_DISABLED = import.meta.env.VITE_DISABLE_OCR === 'true'
@@ -373,6 +377,8 @@ function App() {
                 <Route path="/repair" element={<RepairTool />} />
                 <Route path="/extract-images" element={<ExtractImagesTool />} />
                 <Route path="/grayscale" element={<GrayscaleTool />} />
+                <Route path="/histology-reorderer" element={<HistologyReordererTool />} />
+                <Route path="/study-sheet" element={<StudySheetTool />} />
                 <Route path="/about" element={<About viewMode={viewMode} />} />
                 <Route path="/privacy" element={<PrivacyPolicy />} />
                 <Route path="/settings" element={<SettingsView theme={theme} setTheme={setTheme} />} />
