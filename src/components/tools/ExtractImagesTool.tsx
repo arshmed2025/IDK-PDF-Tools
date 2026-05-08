@@ -3,7 +3,6 @@ import type { PDFDocumentProxy } from 'pdfjs-dist'
 import { Image as ImageIcon, ChevronLeft, ChevronRight, Download, Loader2, X, Sparkles } from 'lucide-react'
 import JSZip from 'jszip'
 import { toast } from 'sonner'
-import { Capacitor } from '@capacitor/core'
 
 import { getPdfMetaData, downloadFile } from '../../utils/pdfHelpers'
 import { addActivity } from '../../utils/recentActivity'
@@ -38,7 +37,7 @@ export default function ExtractImagesTool() {
   const [progress, setProgress] = useState('')
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null)
   const [extractedCount, setExtractedCount] = useState(0)
-  const isNative = Capacitor.isNativePlatform()
+  const [pageInput, setPageInput] = useState('1')
 
   imagesRef.current = images
 
@@ -108,6 +107,7 @@ export default function ExtractImagesTool() {
       pdfDocRef.current = pdfDoc
       setPdfData({ file, pageCount: pdfDoc.numPages, isLocked: false, pdfDoc, thumbnail: meta.thumbnail })
       setPageNumber(1)
+      setPageInput('1')
     } catch (err) {
       toast.error('Failed to load PDF.')
     } finally {
@@ -192,27 +192,14 @@ export default function ExtractImagesTool() {
     setDownloadUrl(null)
     setProgress('')
     setPageNumber(1)
+    setPageInput('1')
     setIsProcessing(false)
   }
-
-  const ActionButton = () => (
-    <button
-      onClick={handleExtract}
-      disabled={isProcessing}
-      className={`w-full bg-rose-500 hover:bg-rose-600 text-white font-black uppercase tracking-widest transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-3 shadow-xl shadow-rose-500/20 ${isNative ? 'py-4 rounded-2xl text-sm' : 'p-6 rounded-3xl text-xl'}`}
-    >
-      {isProcessing
-        ? <><Loader2 className="animate-spin" size={18} /> Extracting…</>
-        : <><Sparkles size={18} /> Extract Images from Page {pageNumber}</>
-      }
-    </button>
-  )
 
   return (
     <NativeToolLayout
       title="Extract Images"
       description="Pull out all original images embedded in a PDF, page by page."
-      actions={pdfData && !pdfData.isLocked && !downloadUrl && images.length === 0 && <ActionButton />}
     >
       <input
         type="file"
@@ -254,34 +241,52 @@ export default function ExtractImagesTool() {
               {previewLoading && <span className="text-[10px] text-gray-400 animate-pulse">Rendering…</span>}
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 flex-wrap">
               <button
-                onClick={() => setPageNumber(p => Math.max(1, p - 1))}
+                onClick={() => { const p = Math.max(1, pageNumber - 1); setPageNumber(p); setPageInput(String(p)) }}
                 disabled={pageNumber <= 1 || isProcessing}
-                className="w-10 h-10 rounded-xl border border-gray-100 dark:border-white/5 bg-gray-50 dark:bg-black hover:bg-rose-50 dark:hover:bg-rose-900/20 disabled:opacity-40 transition-colors flex items-center justify-center text-gray-600 dark:text-zinc-400"
+                className="w-9 h-9 rounded-xl border border-gray-100 dark:border-white/5 bg-gray-50 dark:bg-black hover:bg-rose-50 dark:hover:bg-rose-900/20 disabled:opacity-40 transition-colors flex items-center justify-center text-gray-600 dark:text-zinc-400 shrink-0"
               >
-                <ChevronLeft size={18} />
+                <ChevronLeft size={16} />
               </button>
               <input
-                type="number"
-                min={1}
-                max={pdfData.pageCount}
-                value={pageNumber}
+                type="text"
+                inputMode="numeric"
+                value={pageInput}
                 disabled={isProcessing}
-                onChange={(e) => {
-                  const n = Number(e.target.value)
-                  if (Number.isFinite(n)) setPageNumber(Math.max(1, Math.min(pdfData.pageCount, Math.floor(n))))
+                onChange={(e) => setPageInput(e.target.value)}
+                onBlur={() => {
+                  const n = parseInt(pageInput, 10)
+                  const clamped = Number.isFinite(n) ? Math.max(1, Math.min(pdfData.pageCount, n)) : pageNumber
+                  setPageNumber(clamped)
+                  setPageInput(String(clamped))
                 }}
-                className="w-20 text-center rounded-xl border border-gray-100 dark:border-white/5 bg-white dark:bg-black px-3 py-2 font-mono font-bold text-sm dark:text-white focus:outline-none focus:ring-2 focus:ring-rose-400 focus:border-rose-400 disabled:opacity-50"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') (e.target as HTMLInputElement).blur()
+                }}
+                className="w-14 text-center rounded-xl border border-gray-100 dark:border-white/5 bg-white dark:bg-black px-2 py-2 font-mono font-bold text-sm dark:text-white focus:outline-none focus:ring-2 focus:ring-rose-400 focus:border-rose-400 disabled:opacity-50"
               />
               <button
-                onClick={() => setPageNumber(p => Math.min(pdfData.pageCount, p + 1))}
+                onClick={() => { const p = Math.min(pdfData.pageCount, pageNumber + 1); setPageNumber(p); setPageInput(String(p)) }}
                 disabled={pageNumber >= pdfData.pageCount || isProcessing}
-                className="w-10 h-10 rounded-xl border border-gray-100 dark:border-white/5 bg-gray-50 dark:bg-black hover:bg-rose-50 dark:hover:bg-rose-900/20 disabled:opacity-40 transition-colors flex items-center justify-center text-gray-600 dark:text-zinc-400"
+                className="w-9 h-9 rounded-xl border border-gray-100 dark:border-white/5 bg-gray-50 dark:bg-black hover:bg-rose-50 dark:hover:bg-rose-900/20 disabled:opacity-40 transition-colors flex items-center justify-center text-gray-600 dark:text-zinc-400 shrink-0"
               >
-                <ChevronRight size={18} />
+                <ChevronRight size={16} />
               </button>
-              <span className="text-sm text-gray-400">of {pdfData.pageCount}</span>
+              <span className="text-sm text-gray-400 mr-2">of {pdfData.pageCount}</span>
+
+              {!downloadUrl && images.length === 0 && (
+                <button
+                  onClick={handleExtract}
+                  disabled={isProcessing}
+                  className="ml-auto flex items-center gap-2 px-4 py-2 rounded-xl bg-rose-500 hover:bg-rose-600 text-white text-xs font-black uppercase tracking-widest transition-all active:scale-95 disabled:opacity-50 shadow-md shadow-rose-500/20"
+                >
+                  {isProcessing
+                    ? <><Loader2 size={13} className="animate-spin" /> Extracting…</>
+                    : <><Sparkles size={13} /> Extract</>
+                  }
+                </button>
+              )}
             </div>
 
             {pagePreview && (
