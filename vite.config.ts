@@ -15,12 +15,12 @@ export default defineConfig({
     minify: 'esbuild', // Faster and more stable in resource-constrained environments
     rollupOptions: {
       output: {
-        manualChunks: {
-          'pdf-lib-core': ['pdf-lib'],
-          'pdfjs-viewer': ['pdfjs-dist'],
-          'tesseract-core': ['tesseract.js'],
-          'vendor-ui': ['react', 'react-dom', 'react-router-dom', 'lucide-react', 'sonner'],
-          'vendor-utils': ['jszip', '@dnd-kit/core', '@dnd-kit/sortable', '@dnd-kit/utilities']
+        manualChunks(id) {
+          if (id.includes('node_modules/pdf-lib')) return 'pdf-lib-core';
+          if (id.includes('node_modules/pdfjs-dist')) return 'pdfjs-viewer';
+          if (id.includes('node_modules/tesseract.js')) return 'tesseract-core';
+          if (id.includes('node_modules/@dnd-kit') || id.includes('node_modules/jszip')) return 'vendor-utils';
+          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom') || id.includes('node_modules/react-router-dom') || id.includes('node_modules/lucide-react') || id.includes('node_modules/sonner')) return 'vendor-ui';
         }
       }
     }
