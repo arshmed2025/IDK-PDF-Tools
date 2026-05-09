@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Histology Image Reorderer</title>
+<style>
+  :root {
+    --bg: #f7f5f1;
+    --panel: #ffffff;
+    --ink: #1c1c1c;
+    --ink-soft: #6a6a6a;
+    --rule: #e6e1d6;
+    --accent: #8b3a2f;
+    --accent-soft: #f3e3df;
+    --section: #fdf6dd;
+    --section-ink: #5a4a1d;
+    --section-rule: #e8d57a;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    background: var(--bg);
+    color: var(--ink);
+    margin: 0;
+    padding: 28px 32px 80px;
+    max-width: 1500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  header {
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 18px;
+    margin-bottom: 24px;
+  }
+  h1 {
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin: 0 0 4px;
+  }
+  .sub {
+    color: var(--ink-soft);
+    font-size: 14px;
+    font-style: italic;
+    margin: 0;
+  }
+
+  /* Drop zone */
+  #dropzone {
+    background: var(--panel);
+    border: 2px dashed #c9c2b3;
+    border-radius: 4px;
+    padding: 64px 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  #dropzone:hover, #dropzone.dragover {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+  #dropzone strong {
+    display: block;
+    font-size: 18px;
+    margin-bottom: 6px;
+  }
+  #dropzone small {
+    color: var(--ink-soft);
+    font-size: 13px;
+  }
+  #folderInput { display: none; }
+
+  /* Toolbar */
+  #toolbar {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    padding: 10px 14px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    font-family: "Inter", -apple-system, "Segoe UI", sans-serif;
+  }
+  #counter {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-right: 6px;
+  }
+  #counter strong { color: var(--ink); font-weight: 600; }
+  .spacer { flex: 1; }
+
+  button {
+    font-family: inherit;
+    font-size: 13px;
+    padding: 7px 12px;
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    color: var(--ink);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.12s;
+  }
+  button:hover { background: #f0ece2; border-color: #c9c2b3; }
+  button.primary {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+    font-weight: 500;
+  }
+  button.primary:hover { background: #6b2c24; border-color: #6b2c24; }
+  button.ghost { border-color: transparent; color: var(--ink-soft); }
+  button.ghost:hover { background: #efeae0; color: var(--ink); }
+
+  /* Grid */
+  #grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 12px;
+  }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 8px;
+    cursor: grab;
+    user-select: none;
+    position: relative;
+    transition: transform 0.12s, box-shadow 0.12s, border-color 0.12s;
+  }
+  .card:hover {
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    border-color: #c9c2b3;
+  }
+  .card:active { cursor: grabbing; }
+  .card.dragging {
+    opacity: 0.35;
+    transform: scale(0.97);
+  }
+  .card.drop-before { box-shadow: -3px 0 0 var(--accent); }
+  .card.drop-after  { box-shadow:  3px 0 0 var(--accent); }
+
+  .card .thumb {
+    width: 100%;
+    height: 130px;
+    object-fit: cover;
+    border-radius: 2px;
+    background: #ece7dc;
+    display: block;
+  }
+
+  .card .name {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 11px;
+    color: var(--ink-soft);
+    margin-top: 6px;
+    line-height: 1.35;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .pos {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(0,0,0,0.72);
+    color: white;
+    font-family: "Inter", -apple-system, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 2px;
+    letter-spacing: 0.04em;
+  }
+
+  /* Section divider */
+  .section {
+    grid-column: 1 / -1;
+    background: var(--section);
+    border: 1px solid var(--section-rule);
+    border-radius: 4px;
+    padding: 10px 14px;
+    cursor: grab;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.12s;
+  }
+  .section:hover { border-color: #d4be4a; }
+  .section .grip {
+    color: #b39d4d;
+    font-size: 14px;
+    line-height: 1;
+  }
+  .section input.label-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-family: "Inter", -apple-system, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--section-ink);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 2px 0;
+  }
+  .section .remove {
+    background: none;
+    border: none;
+    color: #a0904f;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+  .section .remove:hover { background: rgba(0,0,0,0.06); color: var(--section-ink); }
+  .section.dragging { opacity: 0.35; }
+  .section.drop-before { box-shadow: 0 -3px 0 var(--accent); }
+  .section.drop-after  { box-shadow: 0  3px 0 var(--accent); }
+
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--ink);
+    color: white;
+    padding: 10px 18px;
+    border-radius: 4px;
+    font-family: "Inter", -apple-system, sans-serif;
+    font-size: 13px;
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+    z-index: 100;
+  }
+  .toast.show { opacity: 1; }
+
+  .empty-hint {
+    text-align: center;
+    color: var(--ink-soft);
+    font-style: italic;
+    padding: 60px 0;
+    grid-column: 1 / -1;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Histology Image Reorderer</h1>
+  <p class="sub">Drag thumbnails to reorder. Add section dividers to group by topic. Download <code>order.txt</code> and drop it in your image folder.</p>
+</header>
+
+<div id="dropzone">
+  <strong>Drop your image folder here</strong>
+  <small>or click to browse — works fully offline, your files never leave this page</small>
+  <input type="file" id="folderInput" webkitdirectory directory multiple>
+</div>
+
+<div id="toolbar">
+  <span id="counter"></span>
+  <button onclick="addDivider()">＋ Add section</button>
+  <button onclick="sortAlpha()">Sort A→Z</button>
+  <button onclick="reverseAll()">Reverse</button>
+  <span class="spacer"></span>
+  <button class="ghost" onclick="reset()">Start over</button>
+  <button class="primary" onclick="downloadOrder()">Download order.txt</button>
+</div>
+
+<div id="grid"></div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPPORTED = ['jpg','jpeg','png','tif','tiff','bmp','gif','webp'];
+
+let items = [];        // [{kind:'image'|'section', file, name, url, label}]
+let dragSrc = null;    // index being dragged
+
+const dropzone     = document.getElementById('dropzone');
+const folderInput  = document.getElementById('folderInput');
+const grid         = document.getElementById('grid');
+const toolbar      = document.getElementById('toolbar');
+const counter      = document.getElementById('counter');
+const toast        = document.getElementById('toast');
+
+dropzone.onclick = () => folderInput.click();
+folderInput.onchange = (e) => loadFiles(e.target.files);
+
+['dragenter','dragover'].forEach(ev =>
+  dropzone.addEventListener(ev, e => { e.preventDefault(); dropzone.classList.add('dragover'); })
+);
+['dragleave','drop'].forEach(ev =>
+  dropzone.addEventListener(ev, e => { e.preventDefault(); dropzone.classList.remove('dragover'); })
+);
+dropzone.addEventListener('drop', e => {
+  const files = [];
+  if (e.dataTransfer.items) {
+    // Walk through items (handles folder drops on Chrome)
+    const promises = [];
+    for (const it of e.dataTransfer.items) {
+      const entry = it.webkitGetAsEntry?.();
+      if (entry) promises.push(walkEntry(entry, files));
+      else if (it.kind === 'file') files.push(it.getAsFile());
+    }
+    Promise.all(promises).then(() => loadFiles(files));
+  } else {
+    loadFiles(Array.from(e.dataTransfer.files));
+  }
+});
+
+function walkEntry(entry, out) {
+  return new Promise(resolve => {
+    if (entry.isFile) {
+      entry.file(f => { out.push(f); resolve(); });
+    } else if (entry.isDirectory) {
+      const reader = entry.createReader();
+      const readAll = () => reader.readEntries(entries => {
+        if (!entries.length) return resolve();
+        Promise.all(entries.map(e => walkEntry(e, out))).then(readAll);
+      });
+      readAll();
+    } else resolve();
+  });
+}
+
+function loadFiles(fileList) {
+  const files = Array.from(fileList).filter(f => {
+    const ext = f.name.split('.').pop().toLowerCase();
+    return SUPPORTED.includes(ext);
+  });
+  if (!files.length) {
+    showToast('No supported images found in selection.');
+    return;
+  }
+  // Deduplicate by name (folder drag may include subfolders)
+  const seen = new Set();
+  const unique = files.filter(f => {
+    if (seen.has(f.name)) return false;
+    seen.add(f.name);
+    return true;
+  });
+  items = unique
+    .sort((a, b) => a.name.localeCompare(b.name, undefined, {numeric: true}))
+    .map(f => ({
+      kind: 'image',
+      file: f,
+      name: f.name,
+      url: URL.createObjectURL(f)
+    }));
+
+  dropzone.style.display = 'none';
+  toolbar.style.display = 'flex';
+  render();
+  showToast(`Loaded ${items.length} image${items.length > 1 ? 's' : ''}`);
+}
+
+function render() {
+  grid.innerHTML = '';
+  if (!items.length) {
+    grid.innerHTML = '<div class="empty-hint">All items removed. Click "Start over" to load images.</div>';
+    updateCounter();
+    return;
+  }
+  items.forEach((item, i) => {
+    const el = item.kind === 'image' ? renderCard(item, i) : renderSection(item, i);
+    grid.appendChild(el);
+  });
+  updateCounter();
+}
+
+function renderCard(item, i) {
+  const el = document.createElement('div');
+  el.className = 'card';
+  el.draggable = true;
+  el.dataset.idx = i;
+  el.innerHTML = `
+    <span class="pos">${getPosition(i)}</span>
+    <img class="thumb" src="${item.url}" alt="" loading="lazy">
+    <div class="name" title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</div>
+  `;
+  attachDragHandlers(el, i);
+  return el;
+}
+
+function renderSection(item, i) {
+  const el = document.createElement('div');
+  el.className = 'section';
+  el.draggable = true;
+  el.dataset.idx = i;
+  el.innerHTML = `
+    <span class="grip">≡</span>
+    <input class="label-input" type="text" value="${escapeHtml(item.label)}" placeholder="SECTION NAME">
+    <button class="remove" title="Remove section">×</button>
+  `;
+  el.querySelector('.label-input').addEventListener('input', e => {
+    items[i].label = e.target.value;
+  });
+  // Stop drag when interacting with the input
+  el.querySelector('.label-input').addEventListener('mousedown', e => e.stopPropagation());
+  el.querySelector('.label-input').addEventListener('dragstart', e => e.preventDefault());
+  el.querySelector('.remove').addEventListener('click', () => {
+    items.splice(i, 1);
+    render();
+  });
+  attachDragHandlers(el, i);
+  return el;
+}
+
+function attachDragHandlers(el, i) {
+  el.addEventListener('dragstart', e => {
+    dragSrc = i;
+    el.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    // Firefox needs data set
+    e.dataTransfer.setData('text/plain', String(i));
+  });
+  el.addEventListener('dragend', () => {
+    el.classList.remove('dragging');
+    document.querySelectorAll('.drop-before, .drop-after')
+      .forEach(x => x.classList.remove('drop-before','drop-after'));
+    dragSrc = null;
+  });
+  el.addEventListener('dragover', e => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    if (dragSrc === null || dragSrc === i) return;
+    el.classList.remove('drop-before','drop-after');
+    const isSection = items[i]?.kind === 'section';
+    const rect = el.getBoundingClientRect();
+    let before;
+    if (isSection) {
+      before = (e.clientY - rect.top) < rect.height / 2;
+      el.classList.add(before ? 'drop-before' : 'drop-after');
+    } else {
+      before = (e.clientX - rect.left) < rect.width / 2;
+      el.classList.add(before ? 'drop-before' : 'drop-after');
+    }
+  });
+  el.addEventListener('dragleave', () => {
+    el.classList.remove('drop-before','drop-after');
+  });
+  el.addEventListener('drop', e => {
+    e.preventDefault();
+    el.classList.remove('drop-before','drop-after');
+    if (dragSrc === null || dragSrc === i) return;
+    const isSection = items[i].kind === 'section';
+    const rect = el.getBoundingClientRect();
+    const before = isSection
+      ? (e.clientY - rect.top) < rect.height / 2
+      : (e.clientX - rect.left) < rect.width / 2;
+    moveItem(dragSrc, i, before);
+  });
+}
+
+function moveItem(from, to, insertBefore) {
+  const moved = items.splice(from, 1)[0];
+  let target = to;
+  if (from < to) target = to - 1;       // adjust because we removed earlier
+  if (!insertBefore) target += 1;
+  items.splice(target, 0, moved);
+  render();
+}
+
+function getPosition(i) {
+  let n = 0;
+  for (let j = 0; j <= i; j++) {
+    if (items[j].kind === 'image') n++;
+  }
+  return n;
+}
+
+function updateCounter() {
+  const imgs = items.filter(x => x.kind === 'image').length;
+  const secs = items.filter(x => x.kind === 'section').length;
+  counter.innerHTML = secs
+    ? `<strong>${imgs}</strong> images · <strong>${secs}</strong> section${secs>1?'s':''}`
+    : `<strong>${imgs}</strong> images`;
+}
+
+function addDivider() {
+  const label = (prompt('Section name (e.g. THYROID, PAROTID, CVS):', 'NEW SECTION') || '').trim();
+  if (!label) return;
+  // Insert at top by default
+  items.unshift({ kind: 'section', label });
+  render();
+  showToast('Section added at top — drag it to where you want it.');
+}
+
+function sortAlpha() {
+  if (items.some(x => x.kind === 'section')) {
+    if (!confirm('Sorting will move all images to alphabetical order, but section dividers will be moved to the top. Continue?')) return;
+  }
+  items.sort((a, b) => {
+    if (a.kind !== b.kind) return a.kind === 'section' ? -1 : 1;
+    return (a.name || a.label).localeCompare(b.name || b.label, undefined, {numeric: true});
+  });
+  render();
+}
+
+function reverseAll() {
+  items.reverse();
+  render();
+}
+
+function reset() {
+  if (items.length && !confirm('Discard your current order and load a different folder?')) return;
+  items.forEach(x => { if (x.url) URL.revokeObjectURL(x.url); });
+  items = [];
+  folderInput.value = '';
+  dropzone.style.display = 'block';
+  toolbar.style.display = 'none';
+  grid.innerHTML = '';
+}
+
+function downloadOrder() {
+  if (!items.length) {
+    showToast('Nothing to export.');
+    return;
+  }
+  const lines = [
+    '# Generated by Histology Image Reorderer',
+    '# One filename per line; lines starting with # are ignored',
+    '# Place this file in your image folder and run the script with ORDER_BY = "custom"',
+    ''
+  ];
+  items.forEach((item, idx) => {
+    if (item.kind === 'section') {
+      if (idx > 0) lines.push('');     // blank line before sections (except first)
+      lines.push('# ----- ' + (item.label || 'SECTION').toUpperCase() + ' -----');
+    } else {
+      lines.push(item.name);
+    }
+  });
+  const blob = new Blob([lines.join('\n')], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'order.txt';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  showToast('order.txt downloaded — drop it into your image folder.');
+}
+
+let toastTimer;
+function showToast(msg) {
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 2400);
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
+}
+</script>
+</body>
+</html>

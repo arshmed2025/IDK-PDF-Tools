@@ -1,5 +1,5 @@
 /**
- * PaperKnife - The Swiss Army Knife for PDFs
+ * IDK PDF Tools - The Swiss Army Knife for PDFs
  * Copyright (C) 2026 potatameister
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -75,8 +75,8 @@ const tools: Tool[] = [
   { title: 'Extract Images', desc: 'Pull out all original images embedded in a PDF.', icon: FileImage, implemented: true, path: '/extract-images', category: 'Convert', color: 'text-yellow-500', bg: 'bg-yellow-50 dark:bg-yellow-900/20' },
   { title: 'PDF to Text', desc: 'Extract plain text from your PDF documents.', icon: FileText, implemented: true, path: '/pdf-to-text', category: 'Convert', color: 'text-blue-600', bg: 'bg-blue-100 dark:bg-blue-900/20' },
   { title: 'Repair PDF', desc: 'Attempt to fix corrupted or unreadable documents.', icon: Wrench, implemented: true, path: '/repair', category: 'Optimize', color: 'text-red-500', bg: 'bg-red-50 dark:bg-red-900/20' },
-  { title: 'Histology Reorderer', desc: 'Drag and drop images to reorder them and export a custom order file.', icon: Microscope, implemented: true, path: '/histology-reorderer', category: 'Edit', color: 'text-fuchsia-500', bg: 'bg-fuchsia-50 dark:bg-fuchsia-900/20' },
-  { title: 'Study Sheet Generator', desc: 'Convert histology images into a printable Word study document.', icon: BookOpen, implemented: true, path: '/study-sheet', category: 'Convert', color: 'text-violet-500', bg: 'bg-violet-50 dark:bg-violet-900/20' },
+  { title: 'Histology Reorderer', desc: 'Drag and drop images to reorder them and export a custom order file.', icon: Microscope, implemented: true, path: '/histology-reorderer', category: 'My Tools', color: 'text-fuchsia-500', bg: 'bg-fuchsia-50 dark:bg-fuchsia-900/20' },
+  { title: 'Study Sheet Generator', desc: 'Convert histology images into a printable Word study document.', icon: BookOpen, implemented: true, path: '/study-sheet', category: 'My Tools', color: 'text-violet-500', bg: 'bg-violet-50 dark:bg-violet-900/20' },
 ]
 
 export const IS_OCR_DISABLED = import.meta.env.VITE_DISABLE_OCR === 'true'
@@ -120,11 +120,11 @@ function QuickDropModal({ file, onClear, onBack }: { file: File, onClear: () => 
           <div className="flex items-center justify-between mb-6">
              <div className="flex items-center gap-3">
                 {onBack && (
-                  <button onClick={onBack} className="p-2 -ml-2 text-gray-400 hover:text-rose-500 transition-colors">
+                  <button onClick={onBack} className="p-2 -ml-2 text-gray-400 hover:text-sky-500 transition-colors">
                     <ChevronDown className="rotate-90" size={20} />
                   </button>
                 )}
-                <div className="w-10 h-10 bg-rose-500 text-white rounded-xl flex items-center justify-center shadow-lg shadow-rose-500/20">
+                <div className="w-10 h-10 bg-sky-500 text-white rounded-xl flex items-center justify-center shadow-lg shadow-sky-500/20">
                    <FileText size={20} />
                 </div>
                 <div className="min-w-0">
@@ -132,7 +132,7 @@ function QuickDropModal({ file, onClear, onBack }: { file: File, onClear: () => 
                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">{(file.size / (1024*1024)).toFixed(2)} MB • PDF Document</p>
                 </div>
              </div>
-             <button onClick={onClear} className="p-2 bg-gray-100 dark:bg-zinc-900 rounded-full text-gray-400 hover:text-rose-500 transition-colors"><X size={18}/></button>
+             <button onClick={onClear} className="p-2 bg-gray-100 dark:bg-zinc-900 rounded-full text-gray-400 hover:text-sky-500 transition-colors"><X size={18}/></button>
           </div>
         </div>
         
@@ -158,7 +158,7 @@ function QuickDropModal({ file, onClear, onBack }: { file: File, onClear: () => 
            <div>
               <button 
                 onClick={() => setShowMore(!showMore)}
-                className="w-full flex items-center justify-between p-4 bg-white dark:bg-zinc-900 border border-gray-100 dark:border-white/5 rounded-2xl text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-rose-500 transition-colors shadow-sm"
+                className="w-full flex items-center justify-between p-4 bg-white dark:bg-zinc-900 border border-gray-100 dark:border-white/5 rounded-2xl text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-sky-500 transition-colors shadow-sm"
               >
                 <span>Full Tool Catalog</span>
                 <ChevronDown size={14} className={`transition-transform duration-300 ${showMore ? 'rotate-180' : ''}`} />
@@ -296,7 +296,7 @@ function App() {
 
   const LoadingSpinner = () => (
     <div className="h-full w-full flex items-center justify-center bg-[#FAFAFA] dark:bg-black min-h-[60vh]">
-      <div className="w-8 h-8 border-4 border-rose-500 border-t-transparent rounded-full animate-spin"></div>
+      <div className="w-8 h-8 border-4 border-sky-500 border-t-transparent rounded-full animate-spin"></div>
     </div>
   )
 
@@ -391,7 +391,7 @@ function App() {
               <div className="fixed bottom-24 right-6 z-[100] flex flex-col gap-2">
                 <button
                   onClick={() => setViewMode(prev => prev === 'web' ? 'android' : 'web')}
-                  className="bg-gray-900 dark:bg-zinc-800 text-white p-4 rounded-3xl shadow-2xl hover:bg-rose-500 transition-all duration-300 flex items-center gap-3 border border-white/10 group active:scale-95"
+                  className="bg-gray-900 dark:bg-zinc-800 text-white p-4 rounded-3xl shadow-2xl hover:bg-sky-500 transition-all duration-300 flex items-center gap-3 border border-white/10 group active:scale-95"
                   title="Toggle Chameleon Mode"
                 >
                   {viewMode === 'web' ? <SmartphoneIcon size={20} /> : <MonitorIcon size={20} />}

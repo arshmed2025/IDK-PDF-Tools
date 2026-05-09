@@ -69,10 +69,10 @@ export default function AndroidView({ theme, toggleTheme, onFileSelect }: Androi
       <header className="px-6 pt-safe pb-2 sticky top-0 z-50 bg-[#FAFAFA]/95 dark:bg-black/95 backdrop-blur-xl border-b border-transparent">
         <div className="flex items-center justify-between h-14">
           <div className="flex items-center gap-3">
-             <PaperKnifeLogo size={24} iconColor="#F43F5E" partColor="currentColor" />
+             <PaperKnifeLogo size={24} iconColor="#0EA5E9" partColor="currentColor" />
              <div className="flex flex-col">
                 <div className="flex items-center gap-1.5">
-                   <span className="text-lg font-black tracking-tighter text-gray-900 dark:text-white leading-none">PaperKnife</span>
+                   <span className="text-lg font-black tracking-tighter text-gray-900 dark:text-white leading-none">IDK PDF Tools</span>
                    <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
                 </div>
                 <span className="text-[7px] font-black text-rose-500 uppercase tracking-[0.2em] mt-0.5">Secure Engine</span>
@@ -200,7 +200,7 @@ export default function AndroidView({ theme, toggleTheme, onFileSelect }: Androi
 
         {/* Minimal Footer */}
         <div className="flex flex-col items-center gap-2 py-8 opacity-20">
-           <p className="text-[8px] font-black uppercase tracking-[0.4em] dark:text-white text-center">PaperKnife v1.0.9</p>
+           <p className="text-[8px] font-black uppercase tracking-[0.4em] dark:text-white text-center">IDK PDF Tools v1</p>
         </div>
 
       </main>

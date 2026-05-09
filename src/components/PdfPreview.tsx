@@ -154,7 +154,7 @@ export default function PdfPreview({ file, onClose, onProcess }: PdfPreviewProps
           </button>
           <div className="flex items-center gap-2.5 min-w-0">
              <div className="w-9 h-9 bg-white rounded-xl flex items-center justify-center shadow-xl shrink-0">
-                <PaperKnifeLogo size={20} iconColor="#F43F5E" partColor="#000000" />
+                <PaperKnifeLogo size={20} iconColor="#0EA5E9" partColor="#000000" />
              </div>
              <div className="hidden sm:block min-w-0">
                 <h2 className="text-sm font-black text-white truncate max-w-[140px] leading-tight">{file.name}</h2>

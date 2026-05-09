@@ -239,7 +239,7 @@ export default function Settings({ theme, setTheme }: { theme: Theme, setTheme: 
           />
           <SettingItem 
             icon={Info} 
-            title="About PaperKnife" 
+            title="About IDK PDF Tools" 
             subtitle="Protocol Details"
             onClick={() => navigate('/about')}
           />

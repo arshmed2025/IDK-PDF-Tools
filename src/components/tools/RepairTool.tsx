@@ -107,7 +107,7 @@ export default function RepairTool() {
         <ShieldAlert className="text-amber-500 shrink-0" size={20} />
         <div className="text-xs text-amber-700 dark:text-amber-400 leading-relaxed text-left">
           <p className="font-black mb-1 uppercase tracking-widest text-[10px]">Technical Protocol:</p>
-          PaperKnife rebuilds the internal cross-reference table and regenerates the file structure from scratch. This can restore access to many files that "cannot be opened."
+          IDK PDF Tools rebuilds the internal cross-reference table and regenerates the file structure from scratch. This can restore access to many files that "cannot be opened."
         </div>
       </div>
       <PrivacyBadge />

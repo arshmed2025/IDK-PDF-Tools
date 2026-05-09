@@ -14,7 +14,8 @@ export default function AndroidToolsView({ tools }: { tools: Tool[] }) {
     Edit: { bg: 'bg-rose-50 dark:bg-rose-900/10', text: 'text-rose-600 dark:text-rose-400', icon: 'text-rose-500', border: 'border-rose-100/50 dark:border-rose-900/20' },
     Secure: { bg: 'bg-indigo-50 dark:bg-indigo-900/10', text: 'text-indigo-600 dark:text-indigo-400', icon: 'text-indigo-500', border: 'border-indigo-100/50 dark:border-indigo-900/20' },
     Convert: { bg: 'bg-emerald-50 dark:bg-emerald-900/10', text: 'text-emerald-600 dark:text-emerald-400', icon: 'text-emerald-500', border: 'border-emerald-100/50 dark:border-emerald-900/20' },
-    Optimize: { bg: 'bg-amber-50 dark:bg-amber-900/10', text: 'text-amber-600 dark:text-amber-400', icon: 'text-amber-500', border: 'border-amber-100/50 dark:border-amber-900/20' }
+    Optimize: { bg: 'bg-amber-50 dark:bg-amber-900/10', text: 'text-amber-600 dark:text-amber-400', icon: 'text-amber-500', border: 'border-amber-100/50 dark:border-amber-900/20' },
+    'My Tools': { bg: 'bg-fuchsia-50 dark:bg-fuchsia-900/10', text: 'text-fuchsia-600 dark:text-fuchsia-400', icon: 'text-fuchsia-500', border: 'border-fuchsia-100/50 dark:border-fuchsia-900/20' }
   }
 
   const filteredTools = useMemo(() => {
@@ -84,8 +85,8 @@ export default function AndroidToolsView({ tools }: { tools: Tool[] }) {
       </main>
 
       <footer className="text-center py-12 opacity-20">
-         <PaperKnifeLogo size={24} iconColor="#F43F5E" partColor="currentColor" className="mx-auto mb-4" />
-         <p className="text-[9px] font-black uppercase tracking-[0.5em]">PaperKnife Version 1.0.9</p>
+         <PaperKnifeLogo size={24} iconColor="#0EA5E9" partColor="currentColor" className="mx-auto mb-4" />
+         <p className="text-[9px] font-black uppercase tracking-[0.5em]">IDK PDF Tools v1</p>
       </footer>
     </div>
   )

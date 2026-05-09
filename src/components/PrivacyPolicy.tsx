@@ -29,7 +29,7 @@ const PrivacyWeb = () => {
                 <span className="text-emerald-500 font-black">of Silence.</span>
               </h1>
               <p className="text-lg text-gray-500 dark:text-zinc-400 font-medium max-w-lg leading-relaxed">
-                PaperKnife isn't just "private" by policy; it's private by architecture. We've eliminated the server entirely, ensuring that "No Data Found" is a technical reality, not just a promise.
+                IDK PDF Tools isn't just "private" by policy; it's private by architecture. We've eliminated the server entirely, ensuring that "No Data Found" is a technical reality, not just a promise.
               </p>
             </div>
           </div>
@@ -159,7 +159,7 @@ const PrivacyAPK = () => {
            </div>
            <h3 className="text-lg font-black uppercase tracking-tight mb-3">Integrity Pledge</h3>
            <p className="text-xs text-zinc-400 leading-relaxed font-medium mb-6">
-              PaperKnife is a transparent document workspace. We believe your data belongs to you, and we build tools that make that technically enforceable.
+              IDK PDF Tools is a transparent document workspace. We believe your data belongs to you, and we build tools that make that technically enforceable.
            </p>
            <a 
              href="https://github.com/potatameister/PaperKnife" 

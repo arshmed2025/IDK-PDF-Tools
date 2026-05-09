@@ -106,7 +106,7 @@ export default function StudySheetTool() {
   const [progressMsg, setProgressMsg] = useState('')
 
   // Config
-  const [branding, setBranding] = useState('PaperKnife | Histology Notes')
+  const [branding, setBranding] = useState('IDK PDF Tools | Histology Notes')
   const [imagesPerPage, setImagesPerPage] = useState<ImagesPerPage>(1)
   const [includeNotes, setIncludeNotes] = useState(false)
   const [noteStyle, setNoteStyle] = useState<NoteStyle>('bullets')

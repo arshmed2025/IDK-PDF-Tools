@@ -130,7 +130,7 @@ export const shareFile = async (data: Uint8Array | string, fileName: string, mim
 
       await Share.share({
         title: fileName,
-        text: `Shared via PaperKnife`,
+        text: `Shared via IDK PDF Tools`,
         url: result.uri,
         dialogTitle: 'Share PDF'
       });
@@ -153,7 +153,7 @@ export const shareFile = async (data: Uint8Array | string, fileName: string, mim
         await navigator.share({
           files: [file],
           title: fileName,
-          text: 'Shared via PaperKnife'
+          text: 'Shared via IDK PDF Tools'
         });
         return true;
       } catch (e) {
