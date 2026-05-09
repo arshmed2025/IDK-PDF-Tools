@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="./icons/logo.svg" />
+    <meta name="theme-color" content="#0EA5E9" />
+    <link rel="apple-touch-icon" href="./icons/logo.svg" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>IDK PDF Tools — Private & Offline PDF Tools</title>
+    <meta name="description" content="100% Client-Side PDF utilities. Merge, Split, Compress, Sign, and Protect PDFs without uploading them to any server. Absolute privacy for your documents." />
+    <meta name="keywords" content="pdf tools, private pdf, offline pdf merge, split pdf locally, compress pdf browser, electronic signature, pdf to image, no upload pdf" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://potatameister.github.io/PaperKnife/" />
+    <meta property="og:title" content="IDK PDF Tools — Private & Offline PDF Tools" />
+    <meta property="og:description" content="Stop uploading your sensitive documents. Process PDFs locally in your browser with IDK PDF Tools." />
+    <meta property="og:image" content="https://potatameister.github.io/PaperKnife/icons/logo.svg" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://potatameister.github.io/PaperKnife/" />
+    <meta property="twitter:title" content="IDK PDF Tools — Private & Offline PDF Tools" />
+    <meta property="twitter:description" content="IDK PDF Tools. 100% Client-Side. Zero Servers. Absolute Privacy." />
+    <meta property="twitter:image" content="https://potatameister.github.io/PaperKnife/icons/logo.svg" />
+
+    <script>
+      (function() {
+        const savedTheme = localStorage.getItem('theme');
+        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (savedTheme === 'dark' || (!savedTheme && systemDark)) {
+          document.documentElement.classList.add('dark');
+          document.documentElement.style.colorScheme = 'dark';
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="/PaperKnife/assets/index-D4EIrX9n.js"></script>
+    <link rel="modulepreload" crossorigin href="/PaperKnife/assets/rolldown-runtime-BPhFYGVA.js">
+    <link rel="modulepreload" crossorigin href="/PaperKnife/assets/pdfjs-viewer-DI7x8l7o.js">
+    <link rel="modulepreload" crossorigin href="/PaperKnife/assets/vendor-ui-yT-o1QXi.js">
+    <link rel="modulepreload" crossorigin href="/PaperKnife/assets/vendor-utils-B49zRmm8.js">
+    <link rel="modulepreload" crossorigin href="/PaperKnife/assets/pdf-lib-core-DW6_ePQG.js">
+    <link rel="modulepreload" crossorigin href="/PaperKnife/assets/tesseract-core-B35kNGIZ.js">
+    <link rel="stylesheet" crossorigin href="/PaperKnife/assets/index-Cij4vXNe.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
