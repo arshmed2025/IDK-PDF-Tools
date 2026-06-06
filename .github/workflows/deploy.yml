@@ -26,7 +26,7 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          VITE_BASE: /PaperKnife/
+          VITE_BASE: /IDK-PDF-Tools/
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
