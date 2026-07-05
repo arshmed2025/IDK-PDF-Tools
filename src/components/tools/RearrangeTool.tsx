@@ -48,7 +48,7 @@ export default function RearrangeTool() {
   const [pageOrder, setPageOrder] = useState<string[]>([])
   const [isProcessing, setIsProcessing] = useState(false)
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null)
-  const [customFileName, setCustomFileName] = useState('paperknife-rearranged')
+  const [customFileName, setCustomFileName] = useState('idk-pdf-tools-rearranged')
   const [unlockPassword, setUnlockPassword] = useState('')
 
   const sensors = useSensors(

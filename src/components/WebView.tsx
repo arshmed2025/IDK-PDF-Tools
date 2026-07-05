@@ -1,5 +1,5 @@
 /**
- * PaperKnife - Professional Web Dashboard
+ * IDK PDF Tools - Professional Web Dashboard
  * A desktop-optimized, sidebar-driven interface.
  */
 
@@ -54,17 +54,17 @@ const ToolCard = ({ title, desc, icon: Icon, onClick, category }: Tool & { onCli
   const colors = categoryColors[category]
   
   return (
-    <button 
+    <button
       onClick={onClick}
-      className="group relative flex flex-col p-6 rounded-[2rem] bg-white dark:bg-zinc-900/40 border border-gray-100 dark:border-white/5 hover:border-sky-500/50 dark:hover:border-sky-500/50 transition-all duration-300 text-left hover:shadow-2xl hover:shadow-sky-500/5 hover:-translate-y-1"
+      className="group relative flex flex-col p-6 rounded-[2rem] bg-white dark:bg-zinc-900/40 border border-gray-100 dark:border-white/5 hover:border-sky-200 dark:hover:border-sky-900/40 hover:bg-sky-50/40 dark:hover:bg-sky-900/10 transition-all duration-300 text-left hover:shadow-lg hover:shadow-sky-500/5 hover:-translate-y-0.5"
     >
-      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-5 ${colors.bg} ${colors.text} group-hover:bg-sky-500 group-hover:text-white transition-all duration-500`}>
+      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-5 ${colors.bg} ${colors.text} group-hover:scale-105 transition-transform duration-300`}>
         <Icon size={24} strokeWidth={2} />
       </div>
-      <h3 className="font-black text-gray-900 dark:text-white mb-2 text-lg tracking-tight group-hover:text-sky-500 transition-colors">{title}</h3>
+      <h3 className="font-black text-gray-900 dark:text-white mb-2 text-lg tracking-tight group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">{title}</h3>
       <p className="text-sm text-gray-500 dark:text-zinc-400 font-medium leading-relaxed line-clamp-2">{desc}</p>
-      
-      <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity text-rose-500">
+
+      <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity text-sky-500">
         <ChevronRightIcon size={20} />
       </div>
     </button>
@@ -94,16 +94,16 @@ export default function WebView({ tools }: { tools: Tool[] }) {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(14,165,233,0.05),transparent_70%)] pointer-events-none" />
         
         <div className="max-w-6xl mx-auto text-center relative z-10">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-sky-50 dark:bg-sky-900/20 text-sky-500 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-8 border border-rose-100 dark:border-rose-900/30">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-sky-50 dark:bg-sky-900/20 text-sky-500 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-8 border border-sky-100 dark:border-sky-900/30">
             <SparklesIcon size={14} /> Professional PDF Engine
           </div>
           <h1 className="text-5xl md:text-7xl font-black tracking-tighter dark:text-white mb-8 leading-[0.9]">
             Stop Uploading <br/>
-            <span className="text-rose-500">Your Privacy.</span>
+            <span className="text-sky-500">Your Privacy.</span>
           </h1>
-          
+
           <div className="max-w-2xl mx-auto relative group mt-12">
-            <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none text-gray-400 group-focus-within:text-rose-500 transition-colors">
+            <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none text-gray-400 group-focus-within:text-sky-500 transition-colors">
               <SearchIcon size={22} />
             </div>
             <input 
@@ -129,7 +129,7 @@ export default function WebView({ tools }: { tools: Tool[] }) {
                   <button
                     key={cat}
                     onClick={() => setActiveCategory(cat)}
-                    className={`px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] transition-all border ${activeCategory === cat ? 'bg-zinc-900 dark:bg-white text-white dark:text-black border-transparent shadow-lg' : 'bg-white dark:bg-zinc-900 text-gray-400 border-gray-100 dark:border-white/5 hover:border-rose-500'}`}
+                    className={`px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] transition-all border ${activeCategory === cat ? 'bg-zinc-900 dark:bg-white text-white dark:text-black border-transparent shadow-lg' : 'bg-white dark:bg-zinc-900 text-gray-400 border-gray-100 dark:border-white/5 hover:border-sky-200 dark:hover:border-sky-900/40 hover:text-gray-600 dark:hover:text-gray-300'}`}
                   >
                     {cat}
                   </button>

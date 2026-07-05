@@ -4,7 +4,7 @@
  * This allows "Privacy Vault" feature: recovering work after refresh.
  */
 
-const DB_NAME = 'PaperKnifeWorkspace';
+const DB_NAME = 'IdkPdfToolsWorkspace';
 const DB_VERSION = 1;
 const STORE_NAME = 'workspaces';
 

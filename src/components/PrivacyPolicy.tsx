@@ -1,12 +1,12 @@
 /**
- * PaperKnife - Privacy Protocol
+ * IDK PDF Tools - Privacy Protocol
  * Absolute data sovereignty and zero-telemetry specification.
  */
 
-import { Shield, EyeOff, ServerOff, Database as DatabaseIcon, History as HistoryIcon, ExternalLink, Lock, Trash2, Cpu } from 'lucide-react'
+import { Shield, EyeOff, ServerOff, Database as DatabaseIcon, History as HistoryIcon, Lock, Trash2, Cpu } from 'lucide-react'
 import { Capacitor } from '@capacitor/core'
 import { NativeToolLayout } from './tools/shared/NativeToolLayout'
-import { PaperKnifeLogo } from './Logo'
+import { AppLogo } from './Logo'
 
 // --- WEB VERSION (TITAN HIGH-DENSITY) ---
 const PrivacyWeb = () => {
@@ -90,16 +90,11 @@ const PrivacyWeb = () => {
               <p className="text-emerald-50 font-medium text-base mb-6 max-w-2xl leading-relaxed">
                  Recent activity logs are stored exclusively in your browser's <span className="font-black">IndexedDB</span>. This data never touches a network. You remain the sole custodian of your history.
               </p>
-              <div className="flex flex-wrap justify-center md:justify-start gap-4">
-                 <a href="https://github.com/potatameister/PaperKnife" target="_blank" className="px-8 py-3 bg-white text-emerald-600 rounded-xl font-black uppercase text-[10px] tracking-widest hover:scale-105 transition-transform flex items-center gap-2 shadow-lg">
-                    <Shield size={14} /> Audit Engine
-                 </a>
-              </div>
            </div>
         </div>
 
         <div className="pt-12 text-center opacity-30">
-           <PaperKnifeLogo size={32} iconColor="#10B981" partColor="currentColor" className="mx-auto mb-4" />
+           <AppLogo size={32} iconColor="#10B981" partColor="currentColor" className="mx-auto mb-4" />
            <p className="text-[10px] font-black uppercase tracking-[0.5em] text-gray-400">Privacy Protocol v1.0.9 Stable</p>
         </div>
       </div>
@@ -158,16 +153,9 @@ const PrivacyAPK = () => {
               <Lock size={80} />
            </div>
            <h3 className="text-lg font-black uppercase tracking-tight mb-3">Integrity Pledge</h3>
-           <p className="text-xs text-zinc-400 leading-relaxed font-medium mb-6">
+           <p className="text-xs text-zinc-400 leading-relaxed font-medium">
               IDK PDF Tools is a transparent document workspace. We believe your data belongs to you, and we build tools that make that technically enforceable.
            </p>
-           <a 
-             href="https://github.com/potatameister/PaperKnife" 
-             target="_blank" 
-             className="flex items-center justify-center gap-2 py-3.5 bg-white text-black rounded-xl font-black uppercase text-[10px] tracking-widest active:scale-95 transition-transform"
-           >
-              Audit Source Code <ExternalLink size={14} />
-           </a>
         </div>
 
         <p className="text-[8px] font-black uppercase text-center text-gray-400 tracking-[0.5em] pt-8">Handcrafted for Security</p>

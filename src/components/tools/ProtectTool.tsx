@@ -30,7 +30,7 @@ export default function ProtectTool() {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [unlockPassword, setUnlockPassword] = useState('')
-  const [customFileName, setCustomFileName] = useState('paperknife-protected')
+  const [customFileName, setCustomFileName] = useState('idk-pdf-tools-protected')
   const isNative = Capacitor.isNativePlatform()
 
   useEffect(() => {

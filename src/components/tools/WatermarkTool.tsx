@@ -18,7 +18,7 @@ export default function WatermarkTool() {
   const [pdfData, setPdfData] = useState<WatermarkPdfData | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null)
-  const [customFileName, setCustomFileName] = useState('paperknife-watermarked')
+  const [customFileName, setCustomFileName] = useState('idk-pdf-tools-watermarked')
   const [unlockPassword, setUnlockPassword] = useState('')
   const [text, setText] = useState('CONFIDENTIAL')
   const [opacity, setOpacity] = useState(0.3)

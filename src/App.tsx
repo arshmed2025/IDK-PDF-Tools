@@ -1,18 +1,12 @@
 /**
  * IDK PDF Tools - The Swiss Army Knife for PDFs
- * Copyright (C) 2026 potatameister
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
  */
 
 import { useState, useEffect, Suspense } from 'react'
 import {
-  Layers, Scissors, Zap, Smartphone as SmartphoneIcon, Monitor as MonitorIcon, Lock, Unlock,
+  Layers, Scissors, Zap, Lock, Unlock,
   RotateCw, Type, Hash, Tags, FileText, ArrowUpDown, PenTool,
-  Wrench, ImagePlus, FileImage, Palette, X, ChevronDown, Microscope, BookOpen
+  Wrench, ImagePlus, FileImage, Palette, X, ChevronDown, GraduationCap
 } from 'lucide-react'
 import { HashRouter, Routes, Route, useNavigate } from 'react-router-dom'
 import { Toaster, toast } from 'sonner'
@@ -27,11 +21,7 @@ import ScrollToTop from './components/ScrollToTop'
 
 // Critical Views - No lazy loading to prevent dynamic import errors on Android
 import WebView from './components/WebView'
-import AndroidView from './components/AndroidView'
-import AndroidToolsView from './components/AndroidToolsView'
-import AndroidHistoryView from './components/AndroidHistoryView'
 import About from './components/About'
-import Thanks from './components/Thanks'
 import PrivacyPolicy from './components/PrivacyPolicy'
 import SettingsView from './components/Settings'
 import PdfPreview from './components/PdfPreview'
@@ -54,8 +44,7 @@ import SignatureTool from './components/tools/SignatureTool'
 import RepairTool from './components/tools/RepairTool'
 import ExtractImagesTool from './components/tools/ExtractImagesTool'
 import GrayscaleTool from './components/tools/GrayscaleTool'
-import HistologyReordererTool from './components/tools/HistologyReordererTool'
-import StudySheetTool from './components/tools/StudySheetTool'
+import StudySheetBuilderTool from './components/tools/StudySheetBuilderTool'
 
 const tools: Tool[] = [
   { title: 'Merge PDF', desc: 'Combine multiple PDF files into one document.', icon: Layers, implemented: true, path: '/merge', category: 'Edit', color: 'text-rose-500', bg: 'bg-rose-50 dark:bg-rose-900/20' },
@@ -75,8 +64,7 @@ const tools: Tool[] = [
   { title: 'Extract Images', desc: 'Pull out all original images embedded in a PDF.', icon: FileImage, implemented: true, path: '/extract-images', category: 'Convert', color: 'text-yellow-500', bg: 'bg-yellow-50 dark:bg-yellow-900/20' },
   { title: 'PDF to Text', desc: 'Extract plain text from your PDF documents.', icon: FileText, implemented: true, path: '/pdf-to-text', category: 'Convert', color: 'text-blue-600', bg: 'bg-blue-100 dark:bg-blue-900/20' },
   { title: 'Repair PDF', desc: 'Attempt to fix corrupted or unreadable documents.', icon: Wrench, implemented: true, path: '/repair', category: 'Optimize', color: 'text-red-500', bg: 'bg-red-50 dark:bg-red-900/20' },
-  { title: 'Histology Reorderer', desc: 'Drag and drop images to reorder them and export a custom order file.', icon: Microscope, implemented: true, path: '/histology-reorderer', category: 'My Tools', color: 'text-fuchsia-500', bg: 'bg-fuchsia-50 dark:bg-fuchsia-900/20' },
-  { title: 'Study Sheet Generator', desc: 'Convert histology images into a printable Word study document.', icon: BookOpen, implemented: true, path: '/study-sheet', category: 'My Tools', color: 'text-violet-500', bg: 'bg-violet-50 dark:bg-violet-900/20' },
+  { title: 'Study Sheet Builder', desc: 'Arrange images, add section dividers, and generate a printable Word study sheet for any subject.', icon: GraduationCap, implemented: true, path: '/study-sheet-builder', category: 'My Tools', color: 'text-fuchsia-500', bg: 'bg-fuchsia-50 dark:bg-fuchsia-900/20' },
 ]
 
 export const IS_OCR_DISABLED = import.meta.env.VITE_DISABLE_OCR === 'true'
@@ -315,7 +303,7 @@ function App() {
       <ScrollToTop />
       <ViewModeProvider viewMode={viewMode} setViewMode={setViewMode}>
         <PipelineProvider>
-          <Layout theme={theme === 'system' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme} toggleTheme={toggleTheme} tools={activeTools} onFileDrop={handleGlobalDrop} viewMode={viewMode}>
+          <Layout theme={theme === 'system' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme} toggleTheme={toggleTheme} tools={activeTools} onFileDrop={handleGlobalDrop}>
             <Toaster 
               position="top-center" 
               expand={true} 
@@ -351,15 +339,7 @@ function App() {
 
             <Suspense fallback={<LoadingSpinner />}>
               <Routes>
-                <Route path="/" element={
-                  viewMode === 'web' ? (
-                    <WebView tools={activeTools} />
-                  ) : (
-                    <AndroidView toggleTheme={toggleTheme} theme={theme === 'system' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme} onFileSelect={(file) => handleGlobalDrop([file] as any)} />
-                  )
-                } />
-                <Route path="/android-tools" element={<AndroidToolsView tools={activeTools} />} />
-                <Route path="/android-history" element={<AndroidHistoryView />} />
+                <Route path="/" element={<WebView tools={activeTools} />} />
                 <Route path="/merge" element={<MergeTool />} />
                 <Route path="/split" element={<SplitTool />} />
                 <Route path="/protect" element={<ProtectTool />} />
@@ -377,28 +357,13 @@ function App() {
                 <Route path="/repair" element={<RepairTool />} />
                 <Route path="/extract-images" element={<ExtractImagesTool />} />
                 <Route path="/grayscale" element={<GrayscaleTool />} />
-                <Route path="/histology-reorderer" element={<HistologyReordererTool />} />
-                <Route path="/study-sheet" element={<StudySheetTool />} />
+                <Route path="/study-sheet-builder" element={<StudySheetBuilderTool />} />
                 <Route path="/about" element={<About viewMode={viewMode} />} />
                 <Route path="/privacy" element={<PrivacyPolicy />} />
                 <Route path="/settings" element={<SettingsView theme={theme} setTheme={setTheme} />} />
-                <Route path="/thanks" element={<Thanks />} />
               </Routes>
             </Suspense>
 
-            {/* Chameleon Toggle (Dev Only) */}
-            {import.meta.env.DEV && (
-              <div className="fixed bottom-24 right-6 z-[100] flex flex-col gap-2">
-                <button
-                  onClick={() => setViewMode(prev => prev === 'web' ? 'android' : 'web')}
-                  className="bg-gray-900 dark:bg-zinc-800 text-white p-4 rounded-3xl shadow-2xl hover:bg-sky-500 transition-all duration-300 flex items-center gap-3 border border-white/10 group active:scale-95"
-                  title="Toggle Chameleon Mode"
-                >
-                  {viewMode === 'web' ? <SmartphoneIcon size={20} /> : <MonitorIcon size={20} />}
-                  <span className="text-xs font-black uppercase tracking-tighter">{viewMode}</span>
-                </button>
-              </div>
-            )}
           </Layout>
         </PipelineProvider>
       </ViewModeProvider>

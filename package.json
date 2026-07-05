@@ -1,5 +1,5 @@
 {
-  "name": "paperknife",
+  "name": "idk-pdf-tools",
   "private": true,
   "version": "1.0.9",
   "type": "module",
@@ -11,9 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@capacitor/android": "^8.0.2",
     "@capacitor/app": "^8.0.0",
-    "@capacitor/cli": "^8.0.2",
     "@capacitor/core": "^8.0.2",
     "@capacitor/filesystem": "^8.1.0",
     "@capacitor/haptics": "^8.0.0",

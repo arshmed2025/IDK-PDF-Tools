@@ -22,7 +22,7 @@ export default function PdfToImageTool() {
   const [progress, setProgress] = useState(0)
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null)
   const [format, setFormat] = useState<ImageFormat>('jpg')
-  const [customFileName, setCustomFileName] = useState('paperknife-images')
+  const [customFileName, setCustomFileName] = useState('idk-pdf-tools-images')
   const [unlockPassword, setUnlockPassword] = useState('')
   const isNative = Capacitor.isNativePlatform()
 

@@ -1,11 +1,5 @@
 /**
- * PaperKnife - The Swiss Army Knife for PDFs
- * Copyright (C) 2026 potatameister
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * IDK PDF Tools - The Swiss Army Knife for PDFs
  */
 
 import * as pdfjsLib from 'pdfjs-dist';
@@ -26,7 +20,7 @@ export interface PdfMetaData {
 // Fixed cMapUrl for true offline usage (relative to base)
 const getCMapUrl = () => {
   const isCapacitor = Capacitor.isNativePlatform();
-  return isCapacitor ? 'cmaps/' : '/PaperKnife/cmaps/';
+  return isCapacitor ? 'cmaps/' : '/cmaps/';
 };
 
 /**

@@ -7,7 +7,7 @@ export interface ActivityEntry {
   resultUrl?: string // Temporary session URL
 }
 
-const DB_NAME = 'PaperKnifeDB'
+const DB_NAME = 'IdkPdfToolsDB'
 const STORE_NAME = 'activity'
 const DB_VERSION = 1
 

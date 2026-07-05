@@ -32,7 +32,7 @@ export default function ImageToPdfTool() {
   const [images, setImages] = useState<ImageFile[]>([])
   const [isProcessing, setIsProcessing] = useState(false)
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null)
-  const [customFileName, setCustomFileName] = useState('paperknife-images-to-pdf')
+  const [customFileName, setCustomFileName] = useState('idk-pdf-tools-images-to-pdf')
   const isNative = Capacitor.isNativePlatform()
 
   const sensors = useSensors(useSensor(PointerSensor), useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }))

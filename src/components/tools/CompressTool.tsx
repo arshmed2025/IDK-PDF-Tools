@@ -224,7 +224,7 @@ export default function CompressTool() {
             }
         }
         const blob = await zip.generateAsync({ type: 'blob' })
-        await downloadFile(new Uint8Array(await blob.arrayBuffer()), 'paperknife-compressed.zip', 'application/zip')
+        await downloadFile(new Uint8Array(await blob.arrayBuffer()), 'idk-pdf-tools-compressed.zip', 'application/zip')
     }
   }
 

@@ -27,7 +27,7 @@ export default function UnlockTool() {
   const [pdfData, setPdfData] = useState<UnlockPdfFile | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
   const [password, setPassword] = useState('')
-  const [customFileName, setCustomFileName] = useState('paperknife-unlocked')
+  const [customFileName, setCustomFileName] = useState('idk-pdf-tools-unlocked')
 
   useEffect(() => {
     const pipelined = consumePipelineFile()

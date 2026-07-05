@@ -1,4 +1,4 @@
-export const PaperKnifeLogo = ({ size = 24, className = "", iconColor, partColor }: { size?: number, className?: string, iconColor?: string, partColor?: string }) => (
+export const AppLogo = ({ size = 24, className = "", iconColor, partColor }: { size?: number, className?: string, iconColor?: string, partColor?: string }) => (
   <svg 
     width={size} 
     height={size} 

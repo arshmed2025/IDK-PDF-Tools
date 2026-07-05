@@ -24,7 +24,7 @@ export default function MetadataTool() {
   const [pdfData, setPdfData] = useState<MetadataPdfData | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null)
-  const [customFileName, setCustomFileName] = useState('paperknife-metadata')
+  const [customFileName, setCustomFileName] = useState('idk-pdf-tools-metadata')
   const [unlockPassword, setUnlockPassword] = useState('')
   const [isDeepCleaning, setIsDeepCleaning] = useState(false)
   const [meta, setMeta] = useState({ 

@@ -20,7 +20,7 @@ export default function GrayscaleTool() {
   const [isProcessing, setIsProcessing] = useState(false)
   const [progress, setProgress] = useState(0)
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null)
-  const [customFileName, setCustomFileName] = useState('paperknife-grayscale')
+  const [customFileName, setCustomFileName] = useState('idk-pdf-tools-grayscale')
   const [unlockPassword, setUnlockPassword] = useState('')
   const isNative = Capacitor.isNativePlatform()
 

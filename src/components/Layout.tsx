@@ -1,30 +1,22 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation, Link } from 'react-router-dom'
-import { 
-  Download as DownloadIcon, 
-  Moon as MoonIcon, 
-  Sun as SunIcon, 
-  History as HistoryIcon, 
-  Upload as UploadIcon, 
-  ChevronRight as ChevronRightIcon, 
+import {
+  Download as DownloadIcon,
+  Moon as MoonIcon,
+  Sun as SunIcon,
+  History as HistoryIcon,
+  Upload as UploadIcon,
+  ChevronRight as ChevronRightIcon,
   ChevronDown as ChevronDownIcon,
-  Plus as PlusIcon, 
-  Trash2 as Trash2Icon, 
-  CheckCircle2 as CheckCircleIcon, 
-  Home as HomeIcon, 
-  Info as InfoIcon, 
-  ArrowLeft as ArrowLeftIcon,
-  LayoutGrid as LayoutGridIcon, 
-  Settings as SettingsIcon,
-  Github as GHIcon,
-  Heart as HeartIcon,
-  Download
+  Trash2 as Trash2Icon,
+  CheckCircle2 as CheckCircleIcon,
+  Info as InfoIcon,
+  ArrowLeft as ArrowLeftIcon
 } from 'lucide-react'
 import { Capacitor } from '@capacitor/core'
-import { Theme, Tool, ToolCategory, ViewMode } from '../types'
-import { PaperKnifeLogo } from './Logo'
+import { Theme, Tool, ToolCategory } from '../types'
+import { AppLogo } from './Logo'
 import { ActivityEntry, getRecentActivity, clearActivity } from '../utils/recentActivity'
-import { hapticImpact } from '../utils/haptics'
 
 interface LayoutProps {
   children: React.ReactNode
@@ -32,7 +24,6 @@ interface LayoutProps {
   toggleTheme: () => void
   tools: Tool[]
   onFileDrop?: (files: FileList) => void
-  viewMode: ViewMode
 }
 
 const categoryColors: Record<ToolCategory, { bg: string, text: string, hover: string, iconBg: string }> = {
@@ -43,7 +34,7 @@ const categoryColors: Record<ToolCategory, { bg: string, text: string, hover: st
   'My Tools': { bg: 'bg-fuchsia-50 dark:bg-fuchsia-900/20', text: 'text-fuchsia-500', hover: 'hover:bg-fuchsia-50 dark:hover:bg-fuchsia-900/10', iconBg: 'bg-fuchsia-100 dark:bg-fuchsia-900/30' }
 }
 
-export default function Layout({ children, theme, toggleTheme, tools, onFileDrop, viewMode }: LayoutProps) {
+export default function Layout({ children, theme, toggleTheme, tools, onFileDrop }: LayoutProps) {
   const navigate = useNavigate()
   const location = useLocation()
   const [isDragging, setIsDragging] = useState(false)
@@ -51,10 +42,6 @@ export default function Layout({ children, theme, toggleTheme, tools, onFileDrop
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [activity, setActivity] = useState<ActivityEntry[]>([])
   const dropdownRef = useRef<HTMLDivElement>(null)
-  const isNative = Capacitor.isNativePlatform()
-  const showMobileNav = isNative || viewMode === 'android'
-  
-  const isMobileBrowser = !isNative && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
 
   useEffect(() => {
     if (showHistory) {
@@ -111,13 +98,6 @@ export default function Layout({ children, theme, toggleTheme, tools, onFileDrop
 
   const isHome = location.pathname === '/'
 
-  const isMainView = isHome || 
-    location.pathname.endsWith('/android-tools') || 
-    location.pathname.endsWith('/android-history') || 
-    location.pathname.endsWith('/settings')
-
-  const shouldShowNav = showMobileNav && isMainView && !activeTool
-
   return (
     <div className={`min-h-screen flex flex-col bg-[#FAFAFA] dark:bg-black text-gray-900 dark:text-zinc-100 transition-colors duration-300`}>
       
@@ -131,14 +111,14 @@ export default function Layout({ children, theme, toggleTheme, tools, onFileDrop
       )}
 
       {/* Web Header */}
-      {!showMobileNav && (
+      {(
         <header className="flex items-center justify-between px-4 md:px-8 h-16 md:h-20 border-b border-gray-100 dark:border-zinc-800 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md sticky top-0 z-[100]">
           <div className="flex items-center gap-2 md:gap-4 flex-1 min-w-0">
             {!isHome && (
               <button onClick={() => navigate('/')} className="p-2 hover:bg-gray-100 dark:hover:bg-zinc-900 rounded-xl transition-colors text-gray-500 hover:text-sky-500 shrink-0"><ArrowLeftIcon size={20} /></button>
             )}
             <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity shrink-0">
-              <PaperKnifeLogo size={Capacitor.isNativePlatform() ? 24 : 28} iconColor="#0EA5E9" />
+              <AppLogo size={Capacitor.isNativePlatform() ? 24 : 28} iconColor="#0EA5E9" />
               <span className="font-black tracking-tighter text-lg md:text-xl dark:text-white hidden xs:block">IDK PDF Tools</span>
             </Link>
             <div className="h-6 w-[1px] bg-gray-200 dark:bg-zinc-800 mx-1 md:mx-2 shrink-0" />
@@ -173,16 +153,6 @@ export default function Layout({ children, theme, toggleTheme, tools, onFileDrop
             </div>
           </div>
           <div className="flex items-center gap-1 md:gap-3 shrink-0">
-            {isMobileBrowser && (
-              <a 
-                href="https://github.com/potatameister/PaperKnife/releases/latest" 
-                target="_blank"
-                className="hidden xs:flex items-center gap-2 px-3 py-1.5 bg-zinc-900 dark:bg-white text-white dark:text-black rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg active:scale-95 transition-all"
-              >
-                <Download size={14} strokeWidth={3} />
-                Get APK
-              </a>
-            )}
             <Link to="/about" className={`p-2 md:px-4 md:py-2 rounded-xl text-[10px] md:text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2 ${location.pathname.includes('about') ? 'bg-sky-50 dark:bg-sky-900/20 text-sky-500' : 'text-gray-500 hover:bg-gray-100 dark:hover:bg-zinc-900'}`}>
               <InfoIcon size={18} />
               <span className="hidden sm:block">About</span>
@@ -198,12 +168,12 @@ export default function Layout({ children, theme, toggleTheme, tools, onFileDrop
         </header>
       )}
 
-      <main className={`flex-1 min-w-0 ${shouldShowNav ? 'pb-32' : ''}`}>
+      <main className="flex-1 min-w-0">
         {children}
       </main>
 
       {/* Web Footer - Modern Compact Design */}
-      {!showMobileNav && (
+      {(
         <footer className="border-t border-gray-100 dark:border-white/5 mt-20 bg-white dark:bg-black relative z-10">
           <div className="max-w-7xl mx-auto px-6 md:px-8 py-10 md:py-12">
             
@@ -212,111 +182,37 @@ export default function Layout({ children, theme, toggleTheme, tools, onFileDrop
               {/* Brand Column (Span 6) */}
               <div className="col-span-2 md:col-span-6 space-y-4">
                 <Link to="/" className="flex items-center gap-2.5 text-gray-900 dark:text-white group w-fit">
-                  <PaperKnifeLogo size={22} iconColor="#0EA5E9" partColor="currentColor" />
+                  <AppLogo size={22} iconColor="#0EA5E9" partColor="currentColor" />
                   <span className="font-bold tracking-tight text-lg group-hover:text-sky-500 transition-colors">IDK PDF Tools</span>
                 </Link>
                 <p className="text-gray-500 dark:text-zinc-500 text-xs leading-relaxed max-w-sm">
-                  The privacy-first PDF toolkit. 100% client-side logic. <br/>
-                  Zero servers. Open source and forever free.
+                  Private PDF tools that run entirely in your browser. <br/>
+                  Your files never leave your device.
                 </p>
                 <div className="flex items-center gap-2 pt-1">
                    <div className="flex items-center gap-2 px-2.5 py-1 bg-emerald-50 dark:bg-emerald-900/10 text-emerald-600 dark:text-emerald-400 rounded-full text-[9px] font-bold uppercase tracking-wide border border-emerald-100 dark:border-emerald-900/20">
                       <div className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" />
                       Live Engine
                    </div>
-                   <a href="https://github.com/potatameister/PaperKnife" target="_blank" className="p-2 bg-gray-50 dark:bg-zinc-900 rounded-xl hover:bg-sky-500 hover:text-white transition-all text-gray-500 dark:text-zinc-500">
-                     <GHIcon size={14} />
-                   </a>
                 </div>
               </div>
 
-              {/* Legal Column */}
-              <div className="col-span-1 md:col-span-3">
+              {/* Protocol Column */}
+              <div className="col-span-2 md:col-span-6">
                 <h4 className="font-bold text-[10px] uppercase tracking-widest text-gray-900 dark:text-white mb-4">Protocol</h4>
                 <ul className="space-y-2.5 text-xs text-gray-500 dark:text-zinc-500">
                   <li><Link to="/about" className="hover:text-sky-500 transition-colors">About</Link></li>
                   <li><Link to="/privacy" className="hover:text-sky-500 transition-colors">Privacy Spec</Link></li>
-                  <li><a href="https://github.com/potatameister/PaperKnife/blob/main/LICENSE" target="_blank" className="hover:text-sky-500 transition-colors">License</a></li>
-                </ul>
-              </div>
-
-              {/* Community Column */}
-              <div className="col-span-1 md:col-span-3">
-                <h4 className="font-bold text-[10px] uppercase tracking-widest text-gray-900 dark:text-white mb-4">Ecosystem</h4>
-                <ul className="space-y-2.5 text-xs text-gray-500 dark:text-zinc-500">
-                  <li><a href="https://github.com/sponsors/potatameister" target="_blank" className="flex items-center gap-2 hover:text-sky-500 transition-colors">Sponsor <HeartIcon size={10} className="text-sky-500" /></a></li>
-                  <li><a href="https://github.com/potatameister/PaperKnife/issues" target="_blank" className="hover:text-sky-500 transition-colors">Report Bug</a></li>
-                  <li><Link to="/thanks" className="hover:text-sky-500 transition-colors">Hall of Fame</Link></li>
                 </ul>
               </div>
 
             </div>
-            
+
             <div className="pt-6 border-t border-gray-100 dark:border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[11px] text-gray-400 dark:text-zinc-600 font-medium">
-              <p>© 2026 IDK PDF Tools Project. No cookies used.</p>
-              <div className="flex gap-6 items-center">
-                 <a href="https://github.com/potatameister" target="_blank" className="hover:text-gray-900 dark:hover:text-white transition-colors">@potatameister</a>
-              </div>
+              <p>© 2026 IDK PDF Tools. No cookies used.</p>
             </div>
           </div>
         </footer>
-      )}
-
-      {/* Titan Bottom Navigation (Solid, Grounded) */}
-      {shouldShowNav && (
-        <nav className="fixed bottom-0 left-0 right-0 bg-white dark:bg-black border-t border-gray-100 dark:border-zinc-800 flex items-end justify-between px-6 pb-[calc(env(safe-area-inset-bottom)+16px)] pt-3 z-[100] shadow-[0_-4px_20px_rgba(0,0,0,0.03)]">
-          <button 
-            onClick={() => navigate('/')}
-            className={`flex flex-col items-center gap-1.5 flex-1 transition-all ${location.pathname === '/' ? 'text-sky-500' : 'text-gray-400 dark:text-zinc-600'}`}
-          >
-            <HomeIcon size={24} strokeWidth={location.pathname === '/' ? 2.5 : 2} />
-            <span className="text-[10px] font-bold">Home</span>
-          </button>
-
-          <button 
-            onClick={() => navigate('/android-tools')}
-            className={`flex flex-col items-center gap-1.5 flex-1 transition-all ${location.pathname === '/android-tools' ? 'text-sky-500' : 'text-gray-400 dark:text-zinc-600'}`}
-          >
-            <LayoutGridIcon size={24} strokeWidth={location.pathname === '/android-tools' ? 2.5 : 2} />
-            <span className="text-[10px] font-bold">Tools</span>
-          </button>
-
-          {/* Floating Action Button - Lifted */}
-          <div className="relative -top-8">
-             <button 
-               onClick={() => {
-                 hapticImpact()
-                 const input = document.createElement('input')
-                 input.type = 'file'
-                 input.accept = '.pdf'
-                 input.onchange = (e) => {
-                   const file = (e.target as HTMLInputElement).files?.[0]
-                   if (file) onFileDrop?.([file] as any)
-                 }
-                 input.click()
-               }}
-               className="w-14 h-14 bg-sky-500 text-white rounded-2xl shadow-xl shadow-sky-500/40 flex items-center justify-center active:scale-90 transition-transform ring-4 ring-white dark:ring-black"
-             >
-               <PlusIcon size={32} strokeWidth={3} />
-             </button>
-          </div>
-          
-          <button 
-            onClick={() => navigate('/android-history')}
-            className={`flex flex-col items-center gap-1.5 flex-1 transition-all ${location.pathname === '/android-history' ? 'text-sky-500' : 'text-gray-400 dark:text-zinc-600'}`}
-          >
-            <HistoryIcon size={24} strokeWidth={location.pathname === '/android-history' ? 2.5 : 2} />
-            <span className="text-[10px] font-bold">History</span>
-          </button>
-
-          <Link 
-            to="/settings"
-            className={`flex flex-col items-center gap-1.5 flex-1 transition-all no-underline ${location.pathname.includes('settings') ? 'text-sky-500' : 'text-gray-400 dark:text-zinc-600'}`}
-          >
-            <SettingsIcon size={24} strokeWidth={location.pathname.includes('settings') ? 2.5 : 2} />
-            <span className="text-[10px] font-bold">Settings</span>
-          </Link>
-        </nav>
       )}
 
       {/* Sidebar History Drawer */}

@@ -19,7 +19,7 @@ export default function PageNumberTool() {
   const [pdfData, setPdfData] = useState<PageNumberPdfData | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null)
-  const [customFileName, setCustomFileName] = useState('paperknife-numbered')
+  const [customFileName, setCustomFileName] = useState('idk-pdf-tools-numbered')
   const [unlockPassword, setUnlockPassword] = useState('')
   const [format, setFormat] = useState('Page {n} of {total}')
   const [position, setPosition] = useState<Position>('bottom-center')

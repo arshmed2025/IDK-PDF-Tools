@@ -53,7 +53,7 @@ export default function SplitTool() {
   const [isProcessing, setIsProcessing] = useState(false)
   const [isLoadingMeta, setIsLoadingMeta] = useState(false)
   const [selectedPages, setSelectedPages] = useState<Set<number>>(new Set())
-  const [customFileName, setCustomFileName] = useState('paperknife-split')
+  const [customFileName, setCustomFileName] = useState('idk-pdf-tools-split')
   const [rangeInput, setRangeInput] = useState('')
   const [splitMode, setSplitMode] = useState<'single' | 'individual'>('single')
   const [unlockPassword, setUnlockPassword] = useState('')

@@ -137,7 +137,7 @@ export default function MergeTool() {
   const { objectUrl, createUrl, clearUrls } = useObjectURL()
   const [files, setFiles] = useState<PdfFile[]>([])
   const [isProcessing, setIsProcessing] = useState(false)
-  const [customFileName, setCustomFileName] = useState('paperknife-merged')
+  const [customFileName, setCustomFileName] = useState('idk-pdf-tools-merged')
   const [progress, setProgress] = useState(0)
   const [isDraggingGlobal, setIsDraggingGlobal] = useState(false)
   const [hasRestorableWorkspace, setHasRestorableWorkspace] = useState(false)

@@ -21,7 +21,7 @@ export default function PdfToTextTool() {
   const [progress, setProgress] = useState(0)
   const [extractionMode, setExtractionMode] = useState<ExtractionMode>('text')
   const [unlockPassword, setUnlockPassword] = useState('')
-  const [customFileName, setCustomFileName] = useState('paperknife-extracted')
+  const [customFileName, setCustomFileName] = useState('idk-pdf-tools-extracted')
   const [copied, setCopied] = useState(false)
   const isNative = Capacitor.isNativePlatform()
 
