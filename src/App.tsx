@@ -48,6 +48,11 @@ import StudySheetBuilderTool from './components/tools/StudySheetBuilderTool'
 import OfficeToPdfTool from './components/tools/OfficeToPdfTool'
 
 const tools: Tool[] = [
+  // --- My Tools: built in-house. The two Developer's Choice tools lead the catalog. ---
+  { title: 'Extract Images', desc: 'Pull out all original images embedded in a PDF.', icon: FileImage, implemented: true, path: '/extract-images', category: 'My Tools', color: 'text-yellow-500', bg: 'bg-yellow-50 dark:bg-yellow-900/20', devChoice: true },
+  { title: 'Study Sheet Builder', desc: 'Arrange images, add section dividers, and generate a printable Word study sheet for any subject.', icon: GraduationCap, implemented: true, path: '/study-sheet-builder', category: 'My Tools', color: 'text-fuchsia-500', bg: 'bg-fuchsia-50 dark:bg-fuchsia-900/20', devChoice: true },
+  { title: 'Office to PDF', desc: 'Convert Word, Excel & PowerPoint files to PDF in your browser.', icon: FileType, implemented: true, path: '/office-to-pdf', category: 'My Tools', color: 'text-blue-500', bg: 'bg-blue-50 dark:bg-blue-900/20' },
+
   { title: 'Merge PDF', desc: 'Combine multiple PDF files into one document.', icon: Layers, implemented: true, path: '/merge', category: 'Edit', color: 'text-rose-500', bg: 'bg-rose-50 dark:bg-rose-900/20' },
   { title: 'Split PDF', desc: 'Visually extract specific pages or ranges.', icon: Scissors, implemented: true, path: '/split', category: 'Edit', color: 'text-blue-500', bg: 'bg-blue-50 dark:bg-blue-900/20' },
   { title: 'Compress PDF', desc: 'Optimize your file size for easier sharing.', icon: Zap, implemented: true, path: '/compress', category: 'Optimize', color: 'text-amber-500', bg: 'bg-amber-50 dark:bg-amber-900/20' },
@@ -62,12 +67,11 @@ const tools: Tool[] = [
   { title: 'Grayscale', desc: 'Convert all document pages to black and white.', icon: Palette, implemented: true, path: '/grayscale', category: 'Optimize', color: 'text-zinc-500', bg: 'bg-zinc-50 dark:bg-zinc-900/20' },
   { title: 'PDF to Image', desc: 'Convert document pages into high-quality images.', icon: FileImage, implemented: true, path: '/pdf-to-image', category: 'Convert', color: 'text-lime-500', bg: 'bg-lime-50 dark:bg-lime-900/20' },
   { title: 'Image to PDF', desc: 'Convert JPG, PNG, and WebP into a professional PDF.', icon: ImagePlus, implemented: true, path: '/image-to-pdf', category: 'Convert', color: 'text-teal-500', bg: 'bg-teal-50 dark:bg-teal-900/20' },
-  { title: 'Office to PDF', desc: 'Convert Word, Excel & PowerPoint files to PDF in your browser.', icon: FileType, implemented: true, path: '/office-to-pdf', category: 'Convert', color: 'text-blue-500', bg: 'bg-blue-50 dark:bg-blue-900/20' },
-  { title: 'Extract Images', desc: 'Pull out all original images embedded in a PDF.', icon: FileImage, implemented: true, path: '/extract-images', category: 'Convert', color: 'text-yellow-500', bg: 'bg-yellow-50 dark:bg-yellow-900/20', devChoice: true },
   { title: 'PDF to Text', desc: 'Extract plain text from your PDF documents.', icon: FileText, implemented: true, path: '/pdf-to-text', category: 'Convert', color: 'text-blue-600', bg: 'bg-blue-100 dark:bg-blue-900/20' },
   { title: 'Repair PDF', desc: 'Attempt to fix corrupted or unreadable documents.', icon: Wrench, implemented: true, path: '/repair', category: 'Optimize', color: 'text-red-500', bg: 'bg-red-50 dark:bg-red-900/20' },
-  { title: 'Study Sheet Builder', desc: 'Arrange images, add section dividers, and generate a printable Word study sheet for any subject.', icon: GraduationCap, implemented: true, path: '/study-sheet-builder', category: 'My Tools', color: 'text-fuchsia-500', bg: 'bg-fuchsia-50 dark:bg-fuchsia-900/20', devChoice: true },
 ]
+
+const ESSENTIAL_PATHS = ['/merge', '/split', '/compress', '/protect']
 
 export const IS_OCR_DISABLED = import.meta.env.VITE_DISABLE_OCR === 'true'
 export const activeTools = IS_OCR_DISABLED 
@@ -79,8 +83,12 @@ function QuickDropModal({ file, onClear, onBack }: { file: File, onClear: () => 
   const { setPipelineFile } = usePipeline()
   const [showMore, setShowMore] = useState(false)
   
-  const essentials = activeTools.slice(0, 4)
-  const otherTools = activeTools.slice(4)
+  // Pinned by path, not position — the catalog order is driven by the dashboard,
+  // and these four are the tools that actually take a dropped PDF.
+  const essentials = ESSENTIAL_PATHS
+    .map(p => activeTools.find(t => t.path === p))
+    .filter((t): t is Tool => Boolean(t))
+  const otherTools = activeTools.filter(t => !ESSENTIAL_PATHS.includes(t.path ?? ''))
 
   const handleAction = async (path: string, title: string) => {
     toast.loading(`Importing ${file.name}...`, { id: 'quick-load' })
