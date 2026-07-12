@@ -4,10 +4,11 @@
  */
 
 import { useState, useMemo } from 'react'
-import { 
-  Search as SearchIcon, 
-  ChevronRight as ChevronRightIcon, 
-  Sparkles as SparklesIcon
+import {
+  Search as SearchIcon,
+  ChevronRight as ChevronRightIcon,
+  Sparkles as SparklesIcon,
+  Star as StarIcon
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Tool, ToolCategory } from '../types'
@@ -50,14 +51,23 @@ const categoryColors: Record<ToolCategory, { bg: string, text: string, border: s
   }
 }
 
-const ToolCard = ({ title, desc, icon: Icon, onClick, category }: Tool & { onClick?: () => void }) => {
+const ToolCard = ({ title, desc, icon: Icon, onClick, category, devChoice }: Tool & { onClick?: () => void }) => {
   const colors = categoryColors[category]
-  
+
   return (
     <button
       onClick={onClick}
-      className="group relative flex flex-col p-6 rounded-[2rem] bg-white dark:bg-zinc-900/40 border border-gray-100 dark:border-white/5 hover:border-sky-200 dark:hover:border-sky-900/40 hover:bg-sky-50/40 dark:hover:bg-sky-900/10 transition-all duration-300 text-left hover:shadow-lg hover:shadow-sky-500/5 hover:-translate-y-0.5"
+      className={`group relative flex flex-col p-6 rounded-[2rem] bg-white dark:bg-zinc-900/40 border transition-all duration-300 text-left hover:bg-sky-50/40 dark:hover:bg-sky-900/10 hover:shadow-lg hover:shadow-sky-500/5 hover:-translate-y-0.5
+        ${devChoice
+          ? 'border-amber-200/70 dark:border-amber-900/40 hover:border-amber-300 dark:hover:border-amber-800/70'
+          : 'border-gray-100 dark:border-white/5 hover:border-sky-200 dark:hover:border-sky-900/40'}`}
     >
+      {devChoice && (
+        <span className="absolute top-5 right-5 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 border border-amber-200/60 dark:border-amber-900/40 text-[8px] font-black uppercase tracking-widest group-hover:opacity-0 transition-opacity">
+          <StarIcon size={8} className="fill-current" /> Dev&apos;s Choice
+        </span>
+      )}
+
       <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-5 ${colors.bg} ${colors.text} group-hover:scale-105 transition-transform duration-300`}>
         <Icon size={24} strokeWidth={2} />
       </div>

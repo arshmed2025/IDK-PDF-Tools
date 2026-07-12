@@ -21,10 +21,22 @@ Most PDF websites ask you to upload your sensitive documents—bank statements, 
 *   **Modify:** Merge multiple files, split pages, rotate, and rearrange.
 *   **Optimize:** Reduce file size with different quality presets.
 *   **Secure:** Encrypt files with passwords or remove them locally.
-*   **Convert:** Convert between PDF and images (JPG/PNG) or plain text.
+*   **Convert:** Office (Word/Excel/PowerPoint) → PDF, PDF ↔ images, and PDF → plain text.
 *   **Sign:** Add an electronic signature to your documents safely.
 *   **Sanitize:** Deep clean metadata (like Author or Producer) to keep your files anonymous.
-*   **My Tools:** Study Sheet Builder — turn a folder of images into a printable Word study sheet for any subject.
+
+#### ⭐ Developer's Choice
+
+Built in-house, not inherited from upstream:
+
+*   **Study Sheet Builder** — arrange a folder of images, add section dividers, and generate a printable Word study sheet for any subject.
+*   **Extract Images** — pull every original embedded image out of a PDF, page by page.
+
+### Credits & Attribution
+
+The **core PDF toolkit** (Merge, Split, Compress, Protect, Unlock, Rotate, Rearrange, Watermark, Page Numbers, Metadata, Signature, Grayscale, Repair, PDF ↔ Image, PDF to Text) is **adapted from the open-source project [PaperKnife](https://github.com/potatameister/PaperKnife) by potatameister**, used under the **GNU AGPL v3** license.
+
+The tools marked **Developer's Choice** above are original work added on top.
 
 ### Development
 

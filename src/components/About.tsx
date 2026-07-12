@@ -10,7 +10,10 @@ import {
   ChevronDown as ChevronDownIcon,
   ServerOff as ServerOffIcon,
   HardDrive as DiskIcon,
-  EyeOff as PrivacyIcon
+  EyeOff as PrivacyIcon,
+  Github as GHIcon,
+  GitFork as GitForkIcon,
+  Star as StarIcon
 } from 'lucide-react'
 import { Capacitor } from '@capacitor/core'
 import { NativeToolLayout } from './tools/shared/NativeToolLayout'
@@ -116,7 +119,60 @@ const AboutWeb = () => {
         </div>
       </section>
 
-      {/* 3. Footer mark */}
+      {/* 3. Credits & Attribution */}
+      <section className="max-w-6xl mx-auto px-6 mb-20">
+        <div className="bg-white dark:bg-zinc-900 rounded-[2.5rem] p-8 md:p-10 border border-gray-100 dark:border-white/5 shadow-sm">
+          <div className="flex items-center gap-2 mb-6">
+            <GitForkIcon size={16} className="text-gray-400" />
+            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Credits &amp; Attribution</h3>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Upstream */}
+            <div className="p-6 rounded-[1.5rem] bg-gray-50 dark:bg-black/40 border border-gray-100 dark:border-white/5">
+              <h4 className="font-black text-sm dark:text-white mb-2">Core PDF Toolkit</h4>
+              <p className="text-xs text-gray-500 dark:text-zinc-400 leading-relaxed mb-4">
+                Merge, Split, Compress, Protect, Unlock, Rotate, Rearrange, Watermark, Page Numbers,
+                Metadata, Signature, Grayscale, Repair, PDF&nbsp;↔&nbsp;Image and PDF&nbsp;to&nbsp;Text are
+                adapted from the open-source project{' '}
+                <a
+                  href="https://github.com/potatameister/PaperKnife"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-sky-500 font-bold underline underline-offset-2 hover:text-sky-600"
+                >
+                  PaperKnife
+                </a>{' '}
+                by potatameister, used under the <span className="font-bold">GNU AGPL v3</span> license.
+              </p>
+              <a
+                href="https://github.com/potatameister/PaperKnife"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-sky-500 transition-colors"
+              >
+                <GHIcon size={14} /> View upstream source
+              </a>
+            </div>
+
+            {/* Ours */}
+            <div className="p-6 rounded-[1.5rem] bg-amber-50/60 dark:bg-amber-900/10 border border-amber-200/60 dark:border-amber-900/30">
+              <div className="flex items-center gap-2 mb-2">
+                <StarIcon size={12} className="text-amber-500 fill-current" />
+                <h4 className="font-black text-sm text-amber-700 dark:text-amber-400">Developer&apos;s Choice</h4>
+              </div>
+              <p className="text-xs text-gray-600 dark:text-zinc-400 leading-relaxed">
+                <span className="font-bold text-gray-900 dark:text-white">Study Sheet Builder</span> and{' '}
+                <span className="font-bold text-gray-900 dark:text-white">Extract Images</span> are built
+                in-house — original work, not inherited from the upstream project. Look for the amber
+                <span className="font-bold"> Dev&apos;s Choice</span> badge on the dashboard.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. Footer mark */}
       <section className="max-w-4xl mx-auto px-6 text-center border-t border-gray-100 dark:border-zinc-900 pt-16">
         <div className="opacity-20">
           <AppLogo size={32} iconColor="#0EA5E9" partColor="currentColor" className="mx-auto mb-4" />

@@ -23,4 +23,7 @@ export interface Tool {
 
   bg?: string
 
+  /** Built by us rather than inherited from the upstream project. */
+  devChoice?: boolean
+
 }

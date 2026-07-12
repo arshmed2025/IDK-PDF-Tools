@@ -210,6 +210,18 @@ export default function Layout({ children, theme, toggleTheme, tools, onFileDrop
 
             <div className="pt-6 border-t border-gray-100 dark:border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[11px] text-gray-400 dark:text-zinc-600 font-medium">
               <p>© 2026 IDK PDF Tools. No cookies used.</p>
+              <p className="text-center md:text-right">
+                Core PDF tools adapted from{' '}
+                <a
+                  href="https://github.com/potatameister/PaperKnife"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline underline-offset-2 hover:text-sky-500 transition-colors"
+                >
+                  PaperKnife
+                </a>
+                {' '}(AGPL-3.0). Dev&apos;s Choice tools are our own.
+              </p>
             </div>
           </div>
         </footer>
