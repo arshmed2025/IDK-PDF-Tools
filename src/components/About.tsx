@@ -159,13 +159,28 @@ const AboutWeb = () => {
             <div className="p-6 rounded-[1.5rem] bg-amber-50/60 dark:bg-amber-900/10 border border-amber-200/60 dark:border-amber-900/30">
               <div className="flex items-center gap-2 mb-2">
                 <StarIcon size={12} className="text-amber-500 fill-current" />
-                <h4 className="font-black text-sm text-amber-700 dark:text-amber-400">Developer&apos;s Choice</h4>
+                <h4 className="font-black text-sm text-amber-700 dark:text-amber-400">My Tools</h4>
               </div>
-              <p className="text-xs text-gray-600 dark:text-zinc-400 leading-relaxed">
-                <span className="font-bold text-gray-900 dark:text-white">Study Sheet Builder</span> and{' '}
-                <span className="font-bold text-gray-900 dark:text-white">Extract Images</span> are built
-                in-house — original work, not inherited from the upstream project. Look for the amber
-                <span className="font-bold"> Dev&apos;s Choice</span> badge on the dashboard.
+              <p className="text-xs text-gray-600 dark:text-zinc-400 leading-relaxed mb-3">
+                Three tools were added here rather than inherited:
+              </p>
+              <ul className="space-y-2 text-xs text-gray-600 dark:text-zinc-400 leading-relaxed">
+                <li>
+                  <span className="font-bold text-gray-900 dark:text-white">Study Sheet Builder</span>{' '}
+                  <StarIcon size={9} className="inline text-amber-500 fill-current" /> — written from scratch.
+                </li>
+                <li>
+                  <span className="font-bold text-gray-900 dark:text-white">Extract Images</span>{' '}
+                  <StarIcon size={9} className="inline text-amber-500 fill-current" /> — upstream shipped a tool
+                  of the same name; this is a ground-up rewrite using our own extractor.
+                </li>
+                <li>
+                  <span className="font-bold text-gray-900 dark:text-white">Office to PDF</span> — written from scratch.
+                </li>
+              </ul>
+              <p className="text-[10px] text-gray-500 dark:text-zinc-500 leading-relaxed mt-3">
+                <StarIcon size={9} className="inline text-amber-500 fill-current" /> = marked
+                <span className="font-bold"> Dev&apos;s Choice</span> on the dashboard.
               </p>
             </div>
           </div>
